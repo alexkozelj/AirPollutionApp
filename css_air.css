@@ -1,0 +1,42 @@
+img {
+  object-fit: contain;
+  max-width: 3.8rem;
+  max-height: 3.8rem; }
+
+.good {
+  background-color: #b3d568;
+  background-image: none;
+  color: white;
+  border-radius: 2rem;
+  border-style: solid; }
+
+.moderate {
+  background-color: #fae255;
+  background-image: none;
+  color: #494e2c; }
+
+.unhealthy-1 {
+  background-color: #f9a869;
+  background-image: none;
+  color: #494e2c; }
+
+.unhealthy-2 {
+  background-color: #f37778;
+  background-image: none;
+  color: #494e2c; }
+
+.very-unhealthy {
+  background-color: #ac81b9;
+  background-image: none;
+  color: #494e2c; }
+
+.hazardous {
+  background-color: #b47e8b;
+  background-image: none;
+  color: #494e2c; }
+
+#description {
+  background-color: whitesmoke;
+  font-style: oblique; }
+
+/*# sourceMappingURL=css_air.css.map */

@@ -4,7 +4,7 @@ class Weather {
       this.city = city;
       this.state = state;
       this.country = country;
-
+      
    }
 
    // Fetch weather from API

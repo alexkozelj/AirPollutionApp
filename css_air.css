@@ -1,3 +1,6 @@
+.list-group-item {
+  padding: 0.35rem 1.25rem; }
+
 img {
   object-fit: contain;
   max-width: 3.8rem;
@@ -13,30 +16,48 @@ img {
 .moderate {
   background-color: #fae255;
   background-image: none;
-  color: #494e2c; }
+  color: #494e2c;
+  border-radius: 2rem;
+  border-style: solid; }
 
 .unhealthy-1 {
   background-color: #f9a869;
   background-image: none;
-  color: #494e2c; }
+  color: #494e2c;
+  border-radius: 2rem;
+  border-style: solid; }
 
 .unhealthy-2 {
   background-color: #f37778;
   background-image: none;
-  color: #494e2c; }
+  color: #494e2c;
+  border-radius: 2rem;
+  border-style: solid; }
 
 .very-unhealthy {
   background-color: #ac81b9;
   background-image: none;
-  color: #494e2c; }
+  color: #494e2c;
+  border-radius: 2rem;
+  border-style: solid; }
 
 .hazardous {
   background-color: #b47e8b;
   background-image: none;
-  color: #494e2c; }
+  color: #494e2c;
+  border-radius: 2rem;
+  border-style: solid; }
 
-#description {
+.description-container {
   background-color: whitesmoke;
-  font-style: oblique; }
+  font-style: oblique;
+  border-radius: 2rem;
+  padding: 5px; }
+  .description-container #description-1 {
+    font-weight: bolder; }
+  .description-container #description-2 {
+    margin-bottom: 0.5rem; }
+  .description-container #description-3 {
+    margin-bottom: 0.5rem; }
 
 /*# sourceMappingURL=css_air.css.map */

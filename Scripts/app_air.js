@@ -19,29 +19,39 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
    let city = document.getElementById('city').value;
    let state = document.getElementById('state').value;
    let country = document.getElementById('country').value;
-   
-   
-   
+
+
+
    if (city.length === 0 && state.length === 0 && country.length === 0) {
       country = "Germany";
       state = "Hessen";
       city = "Frankfurt am Main";
    }
-   
+
+   // Autocomplete
+   // $(function () {
+   //    var countries = ["Baseball", "Tennis", "Golf", "Cricket", "Football", "Hockey", "Badminton", "Volleyball", "Boxing", "Kabaddi", "Chess", "Long Jump", "High Jump", "Racing", "Handball", "Swimming", "Wrestling"];
+
+   //    $("#country").autocomplete({
+   //       source: countries
+   //    });
+
+   // });
+
    console.log(city);
    console.log(state);
    console.log(country);
-   
+
    // Change location
    weather.changeLocation(city, state, country);
-   
+
    // Set location in LS
    storage.setLocationData(city, state, country);
-   
+
    // Get and display weather
    getWeather();
-   
-   
+
+
    // Close modal
    $('#locModal').modal('hide');
 });
@@ -49,6 +59,7 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
 
 function getWeather() {
    // weather.getCountry();
+   weather.getCountry();
    weather.getWeather()
       .then(results => {
          ui.paint(results);

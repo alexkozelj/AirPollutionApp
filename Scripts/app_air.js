@@ -9,10 +9,67 @@ console.log(weatherLocation.country);
 
 // Init weather object
 const weather = new Weather(weatherLocation.city, weatherLocation.state, weatherLocation.country);
+
 // Init UI object
 const ui = new UI();
 // Get weather on DOM load
-document.addEventListener('DOMContentLoaded', getWeather());
+document.addEventListener('DOMContentLoaded', getWeather(), storage.getLocalCountries());
+
+
+
+
+// Modal search box
+const search = document.getElementById("search");
+const matchList = document.getElementById("match-list");
+let states;
+
+const getCountries = async () => {
+   const res = await fetch('countries.json');
+   states = await res.json();
+};
+
+// Filter states
+const searchCountries = searchText => {
+   // Get matches to current text input
+   let matches = states.data.filter(state => {
+      const regex = new RegExp(`^${searchText}`, 'gi');
+     
+      return state.country.match(regex);
+   });
+
+
+   // Clear when input or matches are empty
+   if(searchText.length === 0) {
+      matches = [];
+      matchList.innerHTML = '';
+   }
+   
+   outputHtml(matches);
+
+}
+
+// Show results in HTML
+const outputHtml = matches => {
+   if(matches.length > 0) {
+      const html = matches.map(match => `
+         <div class="card card-body mb-1">
+            <h5>${match.country}</h5>
+         </div>
+      `).join('');
+
+
+      matchList.innerHTML = html;
+   } else {
+      matchList.innerHTML = '';
+   }
+}
+
+// Listen for input
+search.addEventListener('input', () => searchCountries(search.value));
+window.addEventListener('DOMContentLoaded', getCountries)
+
+
+// ///////////////////////////////////////////////////////
 
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
@@ -27,16 +84,6 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
       state = "Hessen";
       city = "Frankfurt am Main";
    }
-
-   // Autocomplete
-   // $(function () {
-   //    var countries = ["Baseball", "Tennis", "Golf", "Cricket", "Football", "Hockey", "Badminton", "Volleyball", "Boxing", "Kabaddi", "Chess", "Long Jump", "High Jump", "Racing", "Handball", "Swimming", "Wrestling"];
-
-   //    $("#country").autocomplete({
-   //       source: countries
-   //    });
-
-   // });
 
    console.log(city);
    console.log(state);
@@ -58,8 +105,7 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
 
 
 function getWeather() {
-   // weather.getCountry();
-   weather.getCountry();
+
    weather.getWeather()
       .then(results => {
          ui.paint(results);

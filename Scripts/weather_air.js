@@ -4,7 +4,7 @@ class Weather {
       this.city = city;
       this.state = state;
       this.country = country;
-      
+
    }
 
    // Fetch weather from API
@@ -21,10 +21,20 @@ class Weather {
    async getCountry() {
       // const response = await fetch(`http://api.airvisual.com/v2/city?city=Beograd&state=Central Serbia&country=Serbia&key=${this.apiKey}`);
       const response = await fetch(`http://api.airvisual.com/v2/countries?key=${this.apiKey}`);
+      let countries = [];
 
-      const responseData = await response.json();
-      console.log(responseData);
-      return responseData;
+      await response.json()
+         .then(data => {
+            for (let i = 0; i < data.data.length; i++) {
+               let country = data.data[i].country;
+               countries.push(country)
+            }
+
+         });
+      
+      // console.log(countries);
+      return countries;
+
    }
 
    changeLocation(city, state, country) {

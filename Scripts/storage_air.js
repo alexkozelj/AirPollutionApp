@@ -39,4 +39,24 @@ class Storage {
       localStorage.setItem('state', state);
       localStorage.setItem('country', country);
    }
+
+   getLocalCountries() {
+      let countries = [];
+      fetch('countries.json')
+         .then(res => {
+            return res.json();
+            // console.log(res);
+         })
+         .then(data => {
+            console.log(data);
+            for (let i = 0; i < data.data.length; i++) {
+               let country = data.data[i].country;
+               countries.push(country)
+            }
+         });
+
+      // console.log(countries);
+      return countries
+   }
 }
+

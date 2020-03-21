@@ -12,61 +12,33 @@ const weather = new Weather(weatherLocation.city, weatherLocation.state, weather
 
 // Init UI object
 const ui = new UI();
+
 // Get weather on DOM load
-document.addEventListener('DOMContentLoaded', getWeather(), storage.getLocalCountries());
+document.addEventListener('DOMContentLoaded', getWeather());
 
+// Init autocomplete
+const autocomplete = new Autocomplete();
 
-
+// //////////////////////////// MODAL //////////////////////////
 
 // Modal search box
 const search = document.getElementById("search");
+// Result list of matches
 const matchList = document.getElementById("match-list");
-let states;
+// variable used for filtering countries
+// const suggestion = document.getElementsByClassName("card card-body choose mb-1");
 
-const getCountries = async () => {
-   const res = await fetch('countries.json');
-   states = await res.json();
-};
-
-// Filter states
-const searchCountries = searchText => {
-   // Get matches to current text input
-   let matches = states.data.filter(state => {
-      const regex = new RegExp(`^${searchText}`, 'gi');
-     
-      return state.country.match(regex);
-   });
-
-
-   // Clear when input or matches are empty
-   if(searchText.length === 0) {
-      matches = [];
-      matchList.innerHTML = '';
-   }
-   
-   outputHtml(matches);
-
-}
-
-// Show results in HTML
-const outputHtml = matches => {
-   if(matches.length > 0) {
-      const html = matches.map(match => `
-         <div class="card card-body mb-1">
-            <h5>${match.country}</h5>
-         </div>
-      `).join('');
-
-
-      matchList.innerHTML = html;
-   } else {
-      matchList.innerHTML = '';
-   }
-}
+// console.log(suggestion);
+console.log(matchList);
 
 // Listen for input
-search.addEventListener('input', () => searchCountries(search.value));
-window.addEventListener('DOMContentLoaded', getCountries)
+search.addEventListener('input', () => autocomplete.searchCountries(search.value));
+// Listen for a click on a input
+search.addEventListener('click', autocomplete.clickInput)
+// Load json country list
+window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
+// Selecting suggestion from list
+matchList.addEventListener('click', autocomplete.selectCountrySug);
 
 
 // ///////////////////////////////////////////////////////

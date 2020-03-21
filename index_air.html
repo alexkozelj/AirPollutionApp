@@ -53,12 +53,18 @@
                </button>
             </div>
             <div class="modal-body">
-               <form id="w-form">
-                  <div class="form-group">
-                     <label for="country">Country</label>
-                     <input type="text" id="search" class="form-control form-control-lg" placeholder="Enter country"/>
+               <form id="w-form" autocomplete="off">
+                  <div class="form-group has-success">
+                     <label class="form-control-label" for="country">Country</label>
+                     <input type="text" id="search" class="form-control" placeholder="Enter country"/>
                   </div>
                   <div id="match-list"></div>
+
+                  <!-- <div class="form-group has-success">
+                     <label class="form-control-label" for="inputSuccess1">Valid input</label>
+                     <input type="text" value="correct value" class="form-control is-valid" id="inputValid">
+                     <div class="valid-feedback">Success! You've done it.</div>
+                   </div> -->
                   <!-- <div class="form-group">
                      <label for="state">State</label>
                      <input type="text" id="state" class="form-control awesomplete" />

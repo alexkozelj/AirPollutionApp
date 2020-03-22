@@ -21,24 +21,32 @@ const autocomplete = new Autocomplete();
 
 // //////////////////////////// MODAL //////////////////////////
 
-// Modal search box
-const search = document.getElementById("search");
+// Search country
+const searchCountry = document.getElementById("countryInput");
+
+
 // Result list of matches
-const matchList = document.getElementById("match-list");
-// variable used for filtering countries
-// const suggestion = document.getElementsByClassName("card card-body choose mb-1");
+const countryMatchList = document.getElementById("country-match-list");
+// Modal form element
+const form = document.getElementById("form");
 
-// console.log(suggestion);
-console.log(matchList);
+// console.log(countryMatchList);
 
-// Listen for input
-search.addEventListener('input', () => autocomplete.searchCountries(search.value));
+// Listen country input
+searchCountry.addEventListener('input', () => autocomplete.searchCountries(searchCountry.value));
+
 // Listen for a click on a input
-search.addEventListener('click', autocomplete.clickInput)
+searchCountry.addEventListener('click', autocomplete.clickInputCountry)
 // Load json country list
 window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
-// Selecting suggestion from list
-matchList.addEventListener('click', autocomplete.selectCountrySug);
+// Selecting country from list
+countryMatchList.addEventListener('click', autocomplete.selectCountry);
+
+// if(autocomplete.countryIsSet === true) {
+//    const stateForm = document.getElementById("stateInput");
+//    stateForm.addEventListener('input', () => autocomplete.searchStates(searchStates.value));
+//    console.log(stateForm);
+// }
 
 
 // ///////////////////////////////////////////////////////

@@ -53,11 +53,13 @@ countryMatchList.addEventListener('click', autocomplete.selectCountry);
 
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
-   let city = document.getElementById('city').value;
-   let state = document.getElementById('state').value;
-   let country = document.getElementById('country').value;
+   // let city = document.getElementById('city').value;
+   // let state = document.getElementById('state').value;
+   // let country = document.getElementById('country').value;
 
-
+   let city = autocomplete.cities;
+   let state = autocomplete.states;
+   let country = autocomplete.country;
 
    if (city.length === 0 && state.length === 0 && country.length === 0) {
       country = "Germany";

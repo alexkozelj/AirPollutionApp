@@ -6,17 +6,30 @@ class Autocomplete {
       this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
       // countries from json file
       this.countries;
+      
+
+      // matches of countries from input 
+      this.countryMatches;
       // input box for countries
       this.country;
-      this.countryIsSet = false;
+      
+      
+      this.stateMatches;
       // input box for states
       this.states;
-      // matches of countries from input 
-      this.matches;
-
+      // state from list of suggestions
       this.stateMatch;
+      // input field for state
       this.stateInput;
       
+
+      this.cityMatches;
+      // cities
+      this.cities;
+      // city from list
+      this.cityMatch;
+      // city input field
+      this.cityInput;
    }
 
    getCountries = async () => {
@@ -28,7 +41,7 @@ class Autocomplete {
    // Filter countries
    searchCountries = searchText => {
       // Get matches to current text input
-      this.matches = this.countries.data.filter(country => {
+      this.countryMatches = this.countries.data.filter(country => {
          const regex = new RegExp(`^${searchText}`, 'gi');
 
          return country.country.match(regex);
@@ -37,11 +50,11 @@ class Autocomplete {
 
       // Clear when input or matches are empty
       if (searchText.length === 0) {
-         this.matches = [];
+         this.countryMatches = [];
          countryMatchList.innerHTML = '';
       }
 
-      this.outputHtmlCountry(this.matches);
+      this.outputHtmlCountry(this.countryMatches);
 
    };
 
@@ -62,9 +75,9 @@ class Autocomplete {
       // countries from the list are always valid
       searchCountry.setAttribute("class", "form-control is-valid");
       // country is selected, no need of displaying a list
-      this.matches = [];
+      this.countryMatches = [];
       // clear the matching list
-      this.outputHtmlCountry(this.matches);
+      this.outputHtmlCountry(this.countryMatches);
       
       // //////////////////////////////// STATE ////////////////////////////////////////
       
@@ -77,7 +90,7 @@ class Autocomplete {
       const state = `
       <div class="form-group has-success">
       <label class="form-control-label" for="state">State / Region</label>
-      <input type="text" id="stateInput" class="form-control" placeholder="Enter state"/>
+      <input type="text" id="stateInput" class="form-control" placeholder="Enter state" autocomplete="off"/>
       </div>
       <div id="state-match-list"></div>
       `;
@@ -141,12 +154,13 @@ class Autocomplete {
 
 
    searchState = searchText => {
+      // this.getStates
       // Search state
       const stateInput = document.getElementById("stateInput");
       // Listen state input
       stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
       // Get matches to current text input
-      this.matches = this.states.data.filter(state => {
+      this.stateMatches = this.states.data.filter(state => {
          const regex = new RegExp(`${searchText}`, 'gi');
 
          return state.state.match(regex);
@@ -156,33 +170,71 @@ class Autocomplete {
 
       // Clear when input or matches are empty
       if (searchText.length === 0) {
-         this.matches = [];
+         this.stateMatches = [];
          this.stateMatch.innerHTML = '';
       }
 
-      this.outputHtmlStates(this.matches);
+      this.outputHtmlStates(this.stateMatches);
 
    }
 
    selectState = (e) => {
       // h5 element
       if (e.target.classList.contains("child")) {
-         this.state = e.target.innerHTML;
+         this.states = e.target.innerHTML;
       }
       // parent div of h5 element
       if (e.target.classList.contains("parent")) {
-         this.state = e.target.firstElementChild.innerHTML;
+         this.states = e.target.firstElementChild.innerHTML;
       }
       
       // search is set to match the state from the list
-      stateInput.value = this.state;
+      stateInput.value = this.states;
+      console.log(this.states);
       // countries from the list are always valid
       stateInput.setAttribute("class", "form-control is-valid");
       // state is selected, no need of displaying a list
-      this.matches = [];
+      this.stateMatches = [];
       // clear the matching list
       // this.outputHtmlStates(this.matches);
       this.stateMatch.innerHTML = '';
+
+      // //////////////// cities ////////////////////////
+         
+      // get states of selected country
+      this.getCities();
+      // create div to put form for states
+      const cityDiv = document.createElement('div');
+      cityDiv.setAttribute("id", "cityForm")
+    
+      const city = `
+      <div class="form-group has-success">
+      <label class="form-control-label" for="city / town"> City / Town</label>
+      <input type="text" id="cityInput" class="form-control" placeholder="Enter city" autocomplete="off"/>
+      </div>
+      <div id="city-match-list"></div>
+      `;
+      cityDiv.innerHTML = city;
+      // append city div to a form
+      form.appendChild(cityDiv);
+      
+      // input of a state form
+      const cityInput = document.getElementById("cityInput");
+      // listen for state input and search states
+      cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
+
+      // list of states of the selected country
+      const cityMatchList = document.getElementById("city-match-list");
+      // Select state from the list
+      cityMatchList.addEventListener('click', autocomplete.selectCity);
+
+      cityInput.addEventListener('click', this.clickInputCity);
+
+      this.cityMatch = cityMatchList;
+      this.cityInput = cityInput;
+
+      
+      e.preventDefault();
 
    }
 
@@ -205,12 +257,98 @@ class Autocomplete {
 
 
 
+
+   // ////////////////////         CITIES         //////////////////////////////
+
+   getCities = async () => {
+      // api.airvisual.com/v2/cities?state={{STATE_NAME}}&country={{COUNTRY_NAME}}&key={{YOUR_API_KEY}}
+      // api.airvisual.com/v2/cities?state=central serbia&country=serbia&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4
+      const res = await fetch(`http://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
+      this.cities = await res.json()
+
+   };
+
+
+   searchCities = searchText => {
+      // Search state
+      const cityInput = document.getElementById("cityInput");
+      // Listen state input
+      cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
+      // Get matches to current text input
+      this.cityMatches = this.cities.data.filter(city => {
+         const regex = new RegExp(`${searchText}`, 'gi');
+
+         return city.city.match(regex);
+         
+      });
+
+
+      // Clear when input or matches are empty
+      if (searchText.length === 0) {
+         this.cityMatches = [];
+         this.cityMatch.innerHTML = '';
+      }
+
+      this.outputHtmlCities(this.cityMatches);
+
+   }
+
+
+   selectCity = (e) => {
+      // h5 element
+      if (e.target.classList.contains("child")) {
+         this.cities = e.target.innerHTML;
+      }
+      // parent div of h5 element
+      if (e.target.classList.contains("parent")) {
+         this.cities = e.target.firstElementChild.innerHTML;
+      }
+      
+      // search is set to match the state from the list
+      cityInput.value = this.cities;
+      // countries from the list are always valid
+      cityInput.setAttribute("class", "form-control is-valid");
+      // state is selected, no need of displaying a list
+      this.cityMatches = [];
+      // clear the matching list
+      this.cityMatch.innerHTML = '';
+
+   }
+
+
+   // Show results in HTML STATE
+   outputHtmlCities = matches => {
+      if (matches.length > 0) {
+         const html = matches.map(match => `
+         <div class="card card-body parent mb-1">
+         <h5 class="child">${match.city}</h5>
+         </div>
+         `).join('');
+         
+         
+         this.cityMatch.innerHTML = html;
+      } else {
+         this.cityMatch.innerHTML = '';
+      }
+   }
+
+
+
+
+
+
+
+
+
+
+
    // Clicking on input will reset to input mode
    clickInputCountry = e => {
       if (e.target.classList.contains("is-valid")) {
          searchCountry.setAttribute("class", "form-control")
          searchCountry.value = '';
          this.removeElement("stateForm");
+         this.removeElement("cityForm");
       }
    }
 
@@ -218,7 +356,17 @@ class Autocomplete {
       if (e.target.classList.contains("is-valid") && e.target.id === "stateInput") {
          this.stateInput.setAttribute("class", "form-control");
          this.stateInput.value = '';
-         
+         this.removeElement("cityForm");
+         this.getCountries();
+         this.getStates();
+      }
+   }
+
+   clickInputCity = e => {
+      if(e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
+         this.cityInput.setAttribute("class", "form-control");
+         this.cityInput.value = '';
+         this.getCities();
       }
    }
    

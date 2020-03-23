@@ -16,9 +16,17 @@ class UI {
 
    
 
-   paint(weather) {
-      
-      this.location.textContent = weather.data.city + ", " + weather.data.country;
+   paint(weather, storage) {
+      if(weather.data.city === "Mitrovice" && weather.data.country === "Kosovo") {
+         this.location.textContent = "Kosovska Mitrovica, Serbia"
+      } 
+      else if (weather.data.city === undefined || weather.data.country === undefined){
+         // this.location.textContent = storage.this.defaultCity + ", " + storage.this.defaultCountry;
+      }
+      else {
+         this.location.textContent = weather.data.city + ", " + weather.data.country;
+      }
+
       this.pollution.textContent = "US AirQualityIndex: " + weather.data.current.pollution.aqius;
       this.pollutionNumber = weather.data.current.pollution.aqius;
       let aqi = weather.data.current.pollution.aqius;

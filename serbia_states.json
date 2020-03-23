@@ -1,0 +1,14 @@
+{
+   "status": "success",
+   "data": [
+       {
+           "state": "AP Vojvodina"
+       },
+       {
+           "state": "Central Serbia"
+       },
+       {
+           "state": "Kosovo"
+       }
+   ]
+}

@@ -61,7 +61,7 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
    let state = autocomplete.states;
    let country = autocomplete.country;
 
-   if (city.length === 0 && state.length === 0 && country.length === 0) {
+   if (city === undefined || city.length === 0 || state === undefined || state.length === 0 || country.length === 0) {
       country = "Germany";
       state = "Hessen";
       city = "Frankfurt am Main";
@@ -90,7 +90,7 @@ function getWeather() {
 
    weather.getWeather()
       .then(results => {
-         ui.paint(results);
+         ui.paint(results, storage);
          // console.log(results);
       })
       .catch(err => {

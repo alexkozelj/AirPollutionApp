@@ -9,13 +9,23 @@ class Weather {
 
    // Fetch weather from API
    async getWeather() {
-      // const response = await fetch(`http://api.airvisual.com/v2/city?city=Beograd&state=Central Serbia&country=Serbia&key=${this.apiKey}`);
-      const response = await fetch(`http://api.airvisual.com/v2/city?city=${this.city}&state=${this.state}&country=${this.country}&key=${this.apiKey}`);
+      // Kosovo is Serbian state
+      if (this.city === "Kosovska Mitrovica" && this.state === "Kosovo" && this.country === "Serbia") {
+         const response = await fetch(`http://api.airvisual.com/v2/city?city=mitrovice&state=mitrovica&country=kosovo&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4`);
 
-      const responseData = await response.json();
-      console.log(responseData);
-      // should say return responseData.weather.data - all that I need is there
-      return responseData;
+         const responseData = await response.json();
+         console.log(responseData);
+
+         return responseData;
+      } else {
+         // const response = await fetch(`http://api.airvisual.com/v2/city?city=Beograd&state=Central Serbia&country=Serbia&key=${this.apiKey}`);
+         const response = await fetch(`http://api.airvisual.com/v2/city?city=${this.city}&state=${this.state}&country=${this.country}&key=${this.apiKey}`);
+
+         const responseData = await response.json();
+         console.log(responseData);
+
+         return responseData;
+      }
    }
 
    async getCountry() {
@@ -31,7 +41,7 @@ class Weather {
             }
 
          });
-      
+
       // console.log(countries);
       return countries;
 

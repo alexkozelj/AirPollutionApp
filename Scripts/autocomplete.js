@@ -6,14 +6,14 @@ class Autocomplete {
       this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
       // countries from json file
       this.countries;
-      
+
 
       // matches of countries from input 
       this.countryMatches;
       // input box for countries
       this.country;
-      
-      
+
+
       this.stateMatches;
       // input box for states
       this.states;
@@ -21,7 +21,7 @@ class Autocomplete {
       this.stateMatch;
       // input field for state
       this.stateInput;
-      
+
 
       this.cityMatches;
       // cities
@@ -37,7 +37,7 @@ class Autocomplete {
       this.countries = await res.json();
    };
 
-   
+
    // Filter countries
    searchCountries = searchText => {
       // Get matches to current text input
@@ -58,7 +58,7 @@ class Autocomplete {
 
    };
 
-   
+
    // Selecting country from suggestion list
    selectCountry = (e) => {
       // h5 element
@@ -69,20 +69,26 @@ class Autocomplete {
       if (e.target.classList.contains("parent")) {
          this.country = e.target.firstElementChild.innerHTML;
       }
-      
+
       // search is set to match the country from the list
       searchCountry.value = this.country;
+      console.log(this.country);
       // countries from the list are always valid
       searchCountry.setAttribute("class", "form-control is-valid");
       // country is selected, no need of displaying a list
       this.countryMatches = [];
       // clear the matching list
       this.outputHtmlCountry(this.countryMatches);
-      
+
       // //////////////////////////////// STATE ////////////////////////////////////////
-      
-      // get states of selected country
-      this.getStates();
+      console.log(this.country);
+      if( this.country === "Serbia"){
+         this.getSerbiaStates();
+      } else {
+         // get states of selected country
+         this.getStates();
+      }
+
       // create div to put form for states
       const div = document.createElement('div');
       div.setAttribute("id", "stateForm")
@@ -114,11 +120,11 @@ class Autocomplete {
       this.stateMatch = stateMatchList;
       this.stateInput = stateInput;
 
-      
+
       e.preventDefault();
    }
-   
-   
+
+
    // Show results in HTML COUNTRY
    outputHtmlCountry = matches => {
       if (matches.length > 0) {
@@ -127,7 +133,7 @@ class Autocomplete {
          <h5 class="child">${match.country}</h5>
          </div>
          `).join('');
-         
+
 
          countryMatchList.innerHTML = html;
       } else {
@@ -152,6 +158,12 @@ class Autocomplete {
 
    };
 
+   getSerbiaStates = async () => {
+      const res = await fetch('serbia_states.json');
+      this.states = await res.json();
+      
+   };
+
 
    searchState = searchText => {
       // this.getStates
@@ -164,7 +176,7 @@ class Autocomplete {
          const regex = new RegExp(`${searchText}`, 'gi');
 
          return state.state.match(regex);
-         
+
       });
 
 
@@ -187,7 +199,7 @@ class Autocomplete {
       if (e.target.classList.contains("parent")) {
          this.states = e.target.firstElementChild.innerHTML;
       }
-      
+
       // search is set to match the state from the list
       stateInput.value = this.states;
       console.log(this.states);
@@ -200,13 +212,17 @@ class Autocomplete {
       this.stateMatch.innerHTML = '';
 
       // //////////////// cities ////////////////////////
-         
-      // get states of selected country
-      this.getCities();
+      if(this.states === "Kosovo") {
+         this.getKosovoCities();
+      } else {
+         // get states of selected country
+         this.getCities();
+      }
+
       // create div to put form for states
       const cityDiv = document.createElement('div');
       cityDiv.setAttribute("id", "cityForm")
-    
+
       const city = `
       <div class="form-group has-success">
       <label class="form-control-label" for="city / town"> City / Town</label>
@@ -217,7 +233,7 @@ class Autocomplete {
       cityDiv.innerHTML = city;
       // append city div to a form
       form.appendChild(cityDiv);
-      
+
       // input of a state form
       const cityInput = document.getElementById("cityInput");
       // listen for state input and search states
@@ -233,7 +249,7 @@ class Autocomplete {
       this.cityMatch = cityMatchList;
       this.cityInput = cityInput;
 
-      
+
       e.preventDefault();
 
    }
@@ -246,8 +262,8 @@ class Autocomplete {
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
-         
-         
+
+
          this.stateMatch.innerHTML = html;
       } else {
          this.stateMatch.innerHTML = '';
@@ -268,6 +284,13 @@ class Autocomplete {
 
    };
 
+   
+   getKosovoCities = async () => {
+      
+      const res = await fetch(`kosovo_cities.json`);
+      this.cities = await res.json()
+
+   };
 
    searchCities = searchText => {
       // Search state
@@ -279,7 +302,7 @@ class Autocomplete {
          const regex = new RegExp(`${searchText}`, 'gi');
 
          return city.city.match(regex);
-         
+
       });
 
 
@@ -303,7 +326,7 @@ class Autocomplete {
       if (e.target.classList.contains("parent")) {
          this.cities = e.target.firstElementChild.innerHTML;
       }
-      
+
       // search is set to match the state from the list
       cityInput.value = this.cities;
       // countries from the list are always valid
@@ -324,8 +347,8 @@ class Autocomplete {
          <h5 class="child">${match.city}</h5>
          </div>
          `).join('');
-         
-         
+
+
          this.cityMatch.innerHTML = html;
       } else {
          this.cityMatch.innerHTML = '';
@@ -348,7 +371,10 @@ class Autocomplete {
          searchCountry.setAttribute("class", "form-control")
          searchCountry.value = '';
          this.removeElement("stateForm");
-         this.removeElement("cityForm");
+         const cityInput = document.getElementById("cityForm");
+         if(cityInput !== null){
+            this.removeElement("cityForm");
+         }
       }
    }
 
@@ -363,16 +389,16 @@ class Autocomplete {
    }
 
    clickInputCity = e => {
-      if(e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
+      if (e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
          this.cityInput.setAttribute("class", "form-control");
          this.cityInput.value = '';
          this.getCities();
       }
    }
-   
+
    removeElement = elementId => {
       // Removes an element from the document
       const element = document.getElementById(elementId);
       element.parentNode.removeChild(element);
-  }
+   }
 }

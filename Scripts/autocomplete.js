@@ -38,6 +38,7 @@ class Autocomplete {
 
    getCountries = async () => {
       const res = await fetch('countries.json');
+      console.log(res);
       this.countries = await res.json();
    };
 
@@ -283,7 +284,7 @@ class Autocomplete {
 
    
    getKosovoCities = async () => {  
-      const res = await fetch(`kosovo_cities.json`);
+      const res = await fetch(`serbia_cities.json`);
       this.cities = await res.json()
    };
 

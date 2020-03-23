@@ -32,12 +32,12 @@ const countryMatchList = document.getElementById("country-match-list");
 const form = document.getElementById("form");
 
 
+// Load json country list
+window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
 // Listen country input
 searchCountry.addEventListener('input', () => autocomplete.searchCountries(searchCountry.value));
 // Listen for a click on a input
 searchCountry.addEventListener('click', autocomplete.clickInputCountry)
-// Load json country list
-window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
 // Selecting country from list
 countryMatchList.addEventListener('click', autocomplete.selectCountry);
 

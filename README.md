@@ -1,12 +1,15 @@
 # AirPollutionApp
 
-Air Pollution App with weather data 
+Air Pollution App that shows AQI (Air Quality Index) with description of it's value and recommendation accordingly. <br>
+Also there are wheather information of a input location. API from www.airvisual.com 
 
-Vanilla JS, FetchAPI, Async/Await, Promises, HTTP requests, OOP
-
-Set location from the input list - country, state/region and city
+<strong>Vanilla JS, FetchAPI, Async/Await, Promises, HTTP requests, OOP</strong>
 <br>
 <br>
-AQI - Air Quality Index with description and recommendations
+You can check it out on: https://alexkozelj.github.io/AirPollutionApp/
 
-API from https://www.airvisual.com/ 
+
+<br>
+<br>
+
+

@@ -21,7 +21,7 @@ class UI {
          this.location.textContent = "Kosovska Mitrovica, Serbia"
       } 
       else if (weather.data.city === undefined || weather.data.country === undefined){
-         // this.location.textContent = storage.this.defaultCity + ", " + storage.this.defaultCountry;
+         this.location.textContent = storage.this.defaultCity + ", " + storage.this.defaultCountry;
       }
       else {
          this.location.textContent = weather.data.city + ", " + weather.data.country;
@@ -31,7 +31,7 @@ class UI {
       this.pollutionNumber = weather.data.current.pollution.aqius;
       let aqi = weather.data.current.pollution.aqius;
 
-      // depending of index, button will get certain class
+      // depending of pollution index, button will get certain class
 
       // Good
       if(aqi < 51) {
@@ -135,6 +135,9 @@ class UI {
       } 
       if (weather.data.current.weather.ic === "04n") {
          this.icon.setAttribute('src', "https://airvisual.com/images/04d.png");
+      }
+      if (weather.data.current.weather.ic === "13n") {
+         this.icon.setAttribute('src', "https://airvisual.com/images/13d.png");
       }
       this.humidity.textContent = `Relative Humidity: ${weather.data.current.weather.hu}%`;
       this.dewpoint.textContent = `Pressure: ${weather.data.current.weather.pr}mb`;

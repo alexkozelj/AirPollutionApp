@@ -4,15 +4,18 @@ class Autocomplete {
    constructor() {
       // Api key
       this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
+      
+      // COUNTRY //
+
       // countries from json file
       this.countries;
-
-
       // matches of countries from input 
       this.countryMatches;
       // input box for countries
       this.country;
 
+
+      // STATE //
 
       this.stateMatches;
       // input box for states
@@ -22,6 +25,7 @@ class Autocomplete {
       // input field for state
       this.stateInput;
 
+      // CITY //
 
       this.cityMatches;
       // cities
@@ -70,18 +74,18 @@ class Autocomplete {
          this.country = e.target.firstElementChild.innerHTML;
       }
 
-      // search is set to match the country from the list
+      // set the country value by clicking on a dropdown list of countries
       searchCountry.value = this.country;
-      console.log(this.country);
-      // countries from the list are always valid
+      
+      // add a completion style to input when selection is done
       searchCountry.setAttribute("class", "form-control is-valid");
-      // country is selected, no need of displaying a list
+      // reset the search list array
       this.countryMatches = [];
-      // clear the matching list
+      // clear search list output
       this.outputHtmlCountry(this.countryMatches);
 
       // //////////////////////////////// STATE ////////////////////////////////////////
-      console.log(this.country);
+      // Serbia states are not complete in api
       if( this.country === "Serbia"){
          this.getSerbiaStates();
       } else {
@@ -92,7 +96,8 @@ class Autocomplete {
       // create div to put form for states
       const div = document.createElement('div');
       div.setAttribute("id", "stateForm")
-      // div.className = 'form-group has-success';
+      
+      // state input div
       const state = `
       <div class="form-group has-success">
       <label class="form-control-label" for="state">State / Region</label>
@@ -101,11 +106,10 @@ class Autocomplete {
       <div id="state-match-list"></div>
       `;
       div.innerHTML = state;
-      // append state div to a form
+      // append state input div to a form
       form.appendChild(div);
-      // switch for the country
-      this.countryIsSet = true;
-      // input of a state form
+      
+      // state input
       const stateInput = document.getElementById("stateInput");
       // listen for state input and search states
       stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
@@ -152,21 +156,17 @@ class Autocomplete {
    // //////////////////////////////////////     STATE      ///////////////////////////////////////////
 
    getStates = async () => {
-      // api.airvisual.com/v2/states?country={{COUNTRY_NAME}}&key={{YOUR_API_KEY}}
       const res = await fetch(`http://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
       this.states = await res.json()
-
    };
 
    getSerbiaStates = async () => {
       const res = await fetch('serbia_states.json');
       this.states = await res.json();
-      
    };
 
 
    searchState = searchText => {
-      // this.getStates
       // Search state
       const stateInput = document.getElementById("stateInput");
       // Listen state input
@@ -208,10 +208,11 @@ class Autocomplete {
       // state is selected, no need of displaying a list
       this.stateMatches = [];
       // clear the matching list
-      // this.outputHtmlStates(this.matches);
       this.stateMatch.innerHTML = '';
 
-      // //////////////// cities ////////////////////////
+
+      // ////////////////    CITIES     ////////////////////////
+
       if(this.states === "Kosovo") {
          this.getKosovoCities();
       } else {
@@ -219,10 +220,10 @@ class Autocomplete {
          this.getCities();
       }
 
-      // create div to put form for states
+      // city input div
       const cityDiv = document.createElement('div');
       cityDiv.setAttribute("id", "cityForm")
-
+      // city input
       const city = `
       <div class="form-group has-success">
       <label class="form-control-label" for="city / town"> City / Town</label>
@@ -262,10 +263,9 @@ class Autocomplete {
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
-
-
          this.stateMatch.innerHTML = html;
       } else {
+         // if no input, clear search list
          this.stateMatch.innerHTML = '';
       }
    }
@@ -277,19 +277,14 @@ class Autocomplete {
    // ////////////////////         CITIES         //////////////////////////////
 
    getCities = async () => {
-      // api.airvisual.com/v2/cities?state={{STATE_NAME}}&country={{COUNTRY_NAME}}&key={{YOUR_API_KEY}}
-      // api.airvisual.com/v2/cities?state=central serbia&country=serbia&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4
       const res = await fetch(`http://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
       this.cities = await res.json()
-
    };
 
    
-   getKosovoCities = async () => {
-      
+   getKosovoCities = async () => {  
       const res = await fetch(`kosovo_cities.json`);
       this.cities = await res.json()
-
    };
 
    searchCities = searchText => {
@@ -327,11 +322,11 @@ class Autocomplete {
          this.cities = e.target.firstElementChild.innerHTML;
       }
 
-      // search is set to match the state from the list
+      // assign cities from search list
       cityInput.value = this.cities;
-      // countries from the list are always valid
+      // set valid style to input
       cityInput.setAttribute("class", "form-control is-valid");
-      // state is selected, no need of displaying a list
+      // city is selected, no need of displaying a list
       this.cityMatches = [];
       // clear the matching list
       this.cityMatch.innerHTML = '';
@@ -354,14 +349,6 @@ class Autocomplete {
          this.cityMatch.innerHTML = '';
       }
    }
-
-
-
-
-
-
-
-
 
 
 
@@ -395,7 +382,7 @@ class Autocomplete {
          this.getCities();
       }
    }
-
+   // remove element by id
    removeElement = elementId => {
       // Removes an element from the document
       const element = document.getElementById(elementId);

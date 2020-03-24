@@ -162,7 +162,7 @@ class Autocomplete {
    };
 
    getSerbiaStates = async () => {
-      const res = await fetch('serbia_states.json');
+      const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/serbia_states.json');
       this.states = await res.json();
    };
 
@@ -284,7 +284,7 @@ class Autocomplete {
 
    
    getKosovoCities = async () => {  
-      const res = await fetch(`serbia_cities.json`);
+      const res = await fetch(`https://alexkozelj.github.io/AirPollutionApp/serbia_cities.json`);
       this.cities = await res.json()
    };
 

@@ -12,14 +12,14 @@ class Weather {
       // Kosovo is Serbian state, correction
       if (this.city === "Kosovska Mitrovica" && this.state === "Kosovo" && this.country === "Serbia") {
          
-         const response = await fetch(`http://api.airvisual.com/v2/city?city=mitrovice&state=mitrovica&country=kosovo&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4`);
+         const response = await fetch(`https://api.airvisual.com/v2/city?city=mitrovice&state=mitrovica&country=kosovo&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4`);
          const responseData = await response.json();
 
          return responseData;
          
       } else {
 
-         const response = await fetch(`http://api.airvisual.com/v2/city?city=${this.city}&state=${this.state}&country=${this.country}&key=${this.apiKey}`);
+         const response = await fetch(`https://api.airvisual.com/v2/city?city=${this.city}&state=${this.state}&country=${this.country}&key=${this.apiKey}`);
          const responseData = await response.json();
 
          return responseData;
@@ -29,7 +29,7 @@ class Weather {
    // get countries from local json file
    async getCountry() {
 
-      const response = await fetch(`http://api.airvisual.com/v2/countries?key=${this.apiKey}`);
+      const response = await fetch(`https://api.airvisual.com/v2/countries?key=${this.apiKey}`);
       let countries = [];
 
       await response.json()

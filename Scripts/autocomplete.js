@@ -157,7 +157,7 @@ class Autocomplete {
    // //////////////////////////////////////     STATE      ///////////////////////////////////////////
 
    getStates = async () => {
-      const res = await fetch(`http://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
+      const res = await fetch(`https://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
       this.states = await res.json()
    };
 
@@ -278,7 +278,7 @@ class Autocomplete {
    // ////////////////////         CITIES         //////////////////////////////
 
    getCities = async () => {
-      const res = await fetch(`http://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
+      const res = await fetch(`https://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
       this.cities = await res.json()
    };
 

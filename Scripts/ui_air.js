@@ -35,7 +35,7 @@ class UI {
 
       // Good
       if(aqi < 51) {
-         this.pollutionSign.setAttribute("class", "col-md-4 mx-auto text-center mb-4 mt-4 good");
+         this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 good");
          this.pollutionSign.innerHTML = "Good";
          // description text
          const header = "0 - 50 = Good";
@@ -49,7 +49,7 @@ class UI {
       // Moderate
       else if (aqi > 51 && aqi < 100) {
          
-         this.pollutionSign.setAttribute("class", "col-md-4 mx-auto text-center mb-4 mt-4 moderate");
+         this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 moderate");
          this.pollutionSign.innerHTML = "Moderate";
 
          // description text

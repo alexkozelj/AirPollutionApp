@@ -22,6 +22,7 @@ class Storage {
       }
 
       if (localStorage.getItem('country') === null) {
+         console.log(localStorage.getItem('country'));
          this.country = this.defaultCountry;
       } else {
          this.country = localStorage.getItem('country');

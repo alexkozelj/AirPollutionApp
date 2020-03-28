@@ -8,6 +8,7 @@ class Storage {
       this.defaultCountry = 'Germany';
    }
 
+   // when loading the DOM, created default city to show
    getLocationData() {
       if (localStorage.getItem('city') === null) {
          this.city = this.defaultCity;
@@ -22,7 +23,7 @@ class Storage {
       }
 
       if (localStorage.getItem('country') === null) {
-         console.log(localStorage.getItem('country'));
+         // console.log(localStorage.getItem('country'));
          this.country = this.defaultCountry;
       } else {
          this.country = localStorage.getItem('country');

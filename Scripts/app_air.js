@@ -13,6 +13,18 @@ const weather = new Weather(weatherLocation.city, weatherLocation.state, weather
 // Init UI object
 const ui = new UI();
 
+
+// Spinner
+const spinner = new Spinner();
+
+// child of a row div
+const rowDiv = document.getElementById("parent-div");
+
+// spinner div
+const spinnerDiv = document.getElementById("spinner");
+
+
+
 // Get weather on DOM load
 document.addEventListener('DOMContentLoaded', getWeather());
 
@@ -30,6 +42,8 @@ const countryMatchList = document.getElementById("country-match-list");
 
 // Modal form element
 const form = document.getElementById("form");
+
+
 
 
 // Load json country list
@@ -53,11 +67,11 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
    let country = autocomplete.country;
 
    // if there is no input or a wrong input
-   if (city === undefined || city.length === 0 || state === undefined || state.length === 0 || country.length === 0) {
-      country = "Germany";
-      state = "Hessen";
-      city = "Frankfurt am Main";
-   }
+   // if (city === undefined || city.length === 0 || state === undefined || state.length === 0 || country.length === 0) {
+   //    country = "Germany";
+   //    state = "Hessen";
+   //    city = "Frankfurt am Main";
+   // }
 
 
    // Change location
@@ -76,9 +90,10 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
 
 
 function getWeather() {
-
+   spinner.showSpinner(spinnerDiv, rowDiv);
    weather.getWeather()
       .then(results => {
+         spinner.hideSpinner(rowDiv, spinnerDiv);
          ui.paint(results, storage);
       })
       .catch(err => {

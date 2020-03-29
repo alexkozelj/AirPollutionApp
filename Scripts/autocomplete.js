@@ -47,9 +47,11 @@ class Autocomplete {
    searchCountries = searchText => {
       // Get matches to current text input
       this.countryMatches = this.countries.data.filter(country => {
-         const regex = new RegExp(`^${searchText}`, 'gi');
+         if(searchText.length > 1) {
+            const regex = new RegExp(`^${searchText}`, 'gi');
+            return country.country.match(regex);
+         }
 
-         return country.country.match(regex);
       });
 
 
@@ -134,7 +136,7 @@ class Autocomplete {
    outputHtmlCountry = matches => {
       if (matches.length > 0) {
          const html = matches.map(match => `
-         <div class="card card-body parent mb-1">
+         <div class="card card-body parent">
          <h5 class="child">${match.country}</h5>
          </div>
          `).join('');
@@ -258,9 +260,9 @@ class Autocomplete {
 
    // Show results in HTML STATE
    outputHtmlStates = matches => {
-      if (matches.length > 0) {
+      if (matches.length > 2) {
          const html = matches.map(match => `
-         <div class="card card-body parent mb-1">
+         <div class="card card-body parent">
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
@@ -268,6 +270,7 @@ class Autocomplete {
       } else {
          // if no input, clear search list
          this.stateMatch.innerHTML = '';
+         stateInput.setAttribute("class", "form-control is-invalid");
       }
    }
 
@@ -335,11 +338,11 @@ class Autocomplete {
    }
 
 
-   // Show results in HTML STATE
+   // Show results in HTML CITY
    outputHtmlCities = matches => {
-      if (matches.length > 0) {
+      if (matches.length > 2) {
          const html = matches.map(match => `
-         <div class="card card-body parent mb-1">
+         <div class="card card-body parent">
          <h5 class="child">${match.city}</h5>
          </div>
          `).join('');

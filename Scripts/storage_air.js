@@ -8,7 +8,7 @@ class Storage {
       this.defaultCountry = 'Germany';
    }
 
-   // when loading the DOM, created default city to show
+   // when loading the DOM, created default city to show or when entering empty field
    getLocationData() {
       if (localStorage.getItem('city') === null || localStorage.getItem('city') === "undefined") {
          this.city = this.defaultCity;

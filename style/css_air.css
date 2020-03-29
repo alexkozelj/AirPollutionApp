@@ -1,7 +1,7 @@
 img {
   object-fit: contain;
-  max-width: 3.8rem;
-  max-height: 3.8rem; }
+  max-width: 3.6rem;
+  max-height: 3.6rem; }
 
 .good {
   background-color: #b3d568;
@@ -68,6 +68,16 @@ img {
 .card:hover {
   background-color: #d1f6fded; }
 
+.form-group {
+  margin-bottom: 0.2rem; }
+
+#form {
+  position: relative; }
+
+#country-match-list {
+  position: absolute;
+  width: 100%; }
+
 #spinner:not([hidden]) {
   position: fixed;
   top: 0;
@@ -82,8 +92,8 @@ img {
   content: "";
   width: 80px;
   height: 80px;
-  border: 2px solid #f3f3f3;
-  border-top: 3px solid #f25a41;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #7de9ffed;
   border-radius: 100%;
   will-change: transform;
   animation: spin 1s infinite linear; }

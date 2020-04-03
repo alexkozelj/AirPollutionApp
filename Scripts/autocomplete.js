@@ -7,7 +7,7 @@ class Autocomplete {
 
       // search input text
       this.searchInputText;
-
+      // index of a list element that is in focus
       this.childIndex = 0;
 
       // COUNTRY //
@@ -87,16 +87,20 @@ class Autocomplete {
          if (this.countryMatches.length === 0) {
             countryInput.setAttribute("class", "form-control is-invalid");
          } else {
+            // if there is a match, assign to true
             let match = false;
+            // go through a list to find a match with input field
             this.countryMatches.forEach((country) => {
+               // if there is a match
                if(this.searchInputText.toLowerCase() === country.country.toLowerCase()){
                   match = true;
+
                   // set the country value by clicking on a dropdown list of countries
                   this.country = country.country;
    
                   // add a completion style to input when selection is done
                   countryInput.setAttribute("class", "form-control is-valid");
-   
+                  // reset a index for a next search
                   this.childIndex = 0;
                   // show state input field
                   stateForm.style.display = "block";
@@ -106,7 +110,7 @@ class Autocomplete {
                   // clear search list output
                   this.outputHtmlCountry(this.countryMatches);
    
-                  // get states
+                  // GET STATES for a selected country
                   // Serbia states are not complete in api
                   if (this.country === "Serbia") {
                      this.getSerbiaStates();
@@ -115,6 +119,7 @@ class Autocomplete {
                      this.getStates();
                   }
                } 
+
                if(match === false) {
                   countryInput.setAttribute("class", "form-control is-invalid");
                }
@@ -123,59 +128,20 @@ class Autocomplete {
 
          }
 
-            // for (let i = 0; i < this.countryMatches.length; i++) {
-            //    if (this.countryMatches[i].country.toLowerCase() === this.searchInputText.toLowerCase()) {
-            //       // console.log(this.countryMatches[this.childIndex - 1].country.toLowerCase());
-            //       // console.log(this.searchInputText.toLowerCase());
-            //       // (this.childIndex === 1) ? this.childIndex = 0 : this.childIndex = this.childIndex;
-            //       //  currentListIndex = i;
-
-            //       // set the country value by clicking on a dropdown list of countries
-            //       this.country = this.countryMatches[i].country;
-
-            //       // add a completion style to input when selection is done
-            //       countryInput.setAttribute("class", "form-control is-valid");
-
-            //       this.childIndex = 0;
-            //       // show state input field
-            //       stateForm.style.display = "block";
-
-            //       // reset the search list array
-            //       this.countryMatches = [];
-            //       // clear search list output
-            //       this.outputHtmlCountry(this.countryMatches);
-
-            //       // get states
-            //       // Serbia states are not complete in api
-            //       if (this.country === "Serbia") {
-            //          this.getSerbiaStates();
-            //       } else {
-            //          // get states of selected country
-            //          this.getStates();
-            //       }
-            //    } 
-                  
-            //    if (this.countryMatches[i].country.toLowerCase() !== this.searchInputText.toLowerCase()){
-            //          console.log(this.countryMatches[i].country.toLowerCase());
-            //          console.log(this.searchInputText.toLowerCase());
-            //          countryInput.setAttribute("class", "form-control is-invalid");
-            //    }
-            
-
-         // }
          e.preventDefault();
       }
+
+
       // DOWN ARROW KEY
       if (e.keyCode === 40) {
-         console.log(this.countryMatches[this.childIndex].country)
-         console.log(this.childIndex);
+         // console.log(this.countryMatches[this.childIndex].country)
          
-         // return to the begin of the list
+         // end of a list
          if (this.childIndex === countryMatchList.children.length - 1) {
-            console.log(this.childIndex);
-
+            // stay at the last li
             this.childIndex = this.countryMatches.length - 1;
          } else {
+            // need a loop while up arrow key changes child index
             for (let i = 0; i < this.countryMatches.length; i++) {
                // match the input name and list item to add style
                if (countryInput.value.toLowerCase() === this.countryMatches[i].country.toLowerCase()) {
@@ -186,7 +152,6 @@ class Autocomplete {
          // assign input text to the countries from match list
          countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
 
-            console.log(this.childIndex);
             // add style to list item 
             for (let i = 0; i < this.countryMatches.length; i++) {
                // match the input name and list item to add style
@@ -209,26 +174,21 @@ class Autocomplete {
          }
          // UP ARROW KEY
          if (e.keyCode === 38) {
-            // return to the begin of the list
-            console.log(this.childIndex);
+            // stays at the first element
             if (this.childIndex === 0) {
                // first list item
                this.childIndex = 0;
             } else {
-               if (countryMatchList.children[this.childIndex].children[0].innerText !== countryInput.value) {
-                  // if child index is 1, return the 0 element
-                  if (this.childIndex - 2 === -1) {
-                     this.childIndex = this.countryMatches.length - 1;
-                  } else {
-                     this.childIndex -= 2;
-                  }
-               } else {
+               // if (countryMatchList.children[this.childIndex].children[0].innerText !== countryInput.value) {
+               //    // if child index is 1, return the 0 element
+               //    // this.childIndex -= 2;
+               //    console.log('necessery')
+               // } else {
                   // going back
                   this.childIndex -= 1;
-               }
+               // }
             }
-            console.log(this.childIndex);
-            console.log(this.countryMatches[this.childIndex].country)
+            
             // assign input text to the countries from match list
             countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
             // add style to list item 
@@ -336,11 +296,13 @@ class Autocomplete {
       getStates = async () => {
          const res = await fetch(`https://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
          this.states = await res.json()
+         // console.log(this.states);
       };
 
       getSerbiaStates = async () => {
          const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/serbia_states.json');
          this.states = await res.json();
+         // console.log(this.states);
       };
 
 

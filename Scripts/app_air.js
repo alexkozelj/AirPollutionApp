@@ -27,10 +27,6 @@ document.addEventListener('DOMContentLoaded', getWeather());
 const autocomplete = new Autocomplete();
 
 
-// //////////////////////////// MODAL //////////////////////////
-
-// Modal form element
-const form = document.getElementById("form");
 
 // ////////////////////    COUNTRY       ////////////////////
 
@@ -65,10 +61,11 @@ const cityMatchList = document.getElementById("city-match-list");
 
 // //////////////////        EVENT LISTENERS         //////////////////////////////
 
-
-
 // Load json country list
 window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
+
+
+// COUNTRY
 // Listen country input
 countryInput.addEventListener('input', () => autocomplete.searchCountries(countryInput.value));
 // Listen for country input keydown
@@ -78,11 +75,21 @@ countryInput.addEventListener('click', autocomplete.clickInputCountry)
 // Selecting country from list
 countryMatchList.addEventListener('click', autocomplete.selectCountry);
 
-countryMatchList.addEventListener('mouseenter', autocomplete.onMouseOver)
+// STATE
+// Listen state input
+stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
+// Listen for state input keydown
+stateInput.addEventListener('keydown', autocomplete.keyboardSelectState);
+// Listen for a click on a input
+stateInput.addEventListener('click', autocomplete.clickInputState)
+// Selecting state from list
+stateMatchList.addEventListener('click', autocomplete.selectState);
 
 
+// //////////////////////////// MODAL //////////////////////////
 
-// ///////////////////////////////////////////////////////
+// Modal form element
+const form = document.getElementById("form");
 
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
@@ -90,14 +97,6 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
    let city = autocomplete.cities;
    let state = autocomplete.states;
    let country = autocomplete.country;
-
-   // if there is no input or a wrong input
-   // if (city === undefined || city.length === 0 || state === undefined || state.length === 0 || country.length === 0) {
-   //    country = "Germany";
-   //    state = "Hessen";
-   //    city = "Frankfurt am Main";
-   // }
-
 
    // Change location
    weather.changeLocation(city, state, country);

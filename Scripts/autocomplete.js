@@ -58,7 +58,7 @@ class Autocomplete {
       this.searchInputText = searchText;
       // Get matches to current text input
       this.countryMatches = this.countries.data.filter(country => {
-         if (searchText.length > 0) {
+         if (searchText.length > 1) {
             const regex = new RegExp(`^${searchText}`, 'gi');
             return country.country.match(regex);
          }

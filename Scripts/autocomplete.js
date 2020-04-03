@@ -222,11 +222,11 @@ class Autocomplete {
    selectCountry = (e) => {
       // h5 element
       if (e.target.classList.contains("child")) {
-         this.country = e.target.innerHTML;
+         this.country = e.target.innerText;
       }
       // parent div of h5 element
       if (e.target.classList.contains("parent")) {
-         this.country = e.target.firstElementChild.innerHTML;
+         this.country = e.target.firstElementChild.innerText;
       }
 
       // set the country value by clicking on a dropdown list of countries

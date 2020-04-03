@@ -81,7 +81,23 @@ img {
 
 /*when hovering an item:*/
 .card:hover {
-  background-color: #d1f6fded; 
+  background-color: #d1f6fded;
+}
+
+.child {
+   cursor: pointer;
+}
+
+.parent {
+   cursor: pointer;
+}
+
+.card:active {
+   background-color: #b0eefaed;
+}
+
+.selectedCard {
+   background-color: #d1f6fded;
 }
 
 .form-group {

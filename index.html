@@ -52,17 +52,30 @@
                </button>
             </div>
             <div class="modal-body">
-               <form id="form" autocomplete="off">
-                  <div class="form-group has-success">
+               <form id="form" autocomplete="notWorkingOff">
+
+                  <!-- Country -->
+                  <div class="form-group" id="country-form">
                      <label class="form-control-label" for="country">Country</label>
-                     <input type="text" id="countryInput" class="form-control" placeholder="Enter country" />
+                     <input type="text" id="countryInput" class="form-control" placeholder="Enter Country"
+                        autocomplete="notWorkingOff" />
                   </div>
                   <div id="country-match-list"></div>
-                  <div class="form-group has-success">
-                     <label class="form-control-label" for="country">zemlja</label>
-                     <input type="text" id="zemljaInput" class="form-control" placeholder="Enter country" />
+
+                  <!-- State -->
+                  <div class="form-group" style="display: none;" id="state-form">
+                     <label class="col-form-label" for="inputDefault">Enter State</label>
+                     <input type="text" class="form-control" placeholder="Enter State" id="stateInput">
                   </div>
-                  <div id="zemlja-match-list"></div>
+                  <div id="state-match-list"></div>
+
+                  <!-- City -->
+                  <div class="form-group" style="display: none;" id="city-form">
+                     <label class="col-form-label" for="inputDefault">Enter City</label>
+                     <input type="text" class="form-control" placeholder="Enter City" id="cityInput">
+                  </div>
+                  <div id="city-match-list"></div>
+
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">

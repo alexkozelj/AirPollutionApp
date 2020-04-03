@@ -2,10 +2,7 @@
 const storage = new Storage();
 // Get stored location data
 const weatherLocation = storage.getLocationData();
-// console.log(weatherLocation);
-// console.log(weatherLocation.city);
-// console.log(weatherLocation.state);
-// console.log(weatherLocation.country);
+
 
 // Init weather object
 const weather = new Weather(weatherLocation.city, weatherLocation.state, weatherLocation.country);
@@ -16,10 +13,8 @@ const ui = new UI();
 
 // Spinner
 const spinner = new Spinner();
-
 // child of a row div
 const rowDiv = document.getElementById("parent-div");
-
 // spinner div
 const spinnerDiv = document.getElementById("spinner");
 
@@ -34,26 +29,56 @@ const autocomplete = new Autocomplete();
 
 // //////////////////////////// MODAL //////////////////////////
 
-// Search country
-const searchCountry = document.getElementById("countryInput");
-
-// Result list of matches
-const countryMatchList = document.getElementById("country-match-list");
-
 // Modal form element
 const form = document.getElementById("form");
 
+// ////////////////////    COUNTRY       ////////////////////
+
+// Country input 
+const countryInput = document.getElementById("countryInput");
+// Country fieldset
+const countryForm = document.getElementById("country-form");
+// Result list of matches
+const countryMatchList = document.getElementById("country-match-list");
+
+
+// ///////////////////     STATE      ///////////////
+
+// State input
+const stateInput = document.getElementById("stateInput");
+// State form
+const stateForm = document.getElementById("state-form");
+// State match list
+const stateMatchList = document.getElementById("state-match-list");
+
+
+// ////////////////////    CITY        ////////////////////////
+
+// City input field
+const cityInput = document.getElementById("cityInput");
+// City form
+const cityForm = document.getElementById("city-form");
+// City match list
+const cityMatchList = document.getElementById("city-match-list");
+
+
+
+// //////////////////        EVENT LISTENERS         //////////////////////////////
 
 
 
 // Load json country list
 window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
 // Listen country input
-searchCountry.addEventListener('input', () => autocomplete.searchCountries(searchCountry.value));
+countryInput.addEventListener('input', () => autocomplete.searchCountries(countryInput.value));
+// Listen for country input keydown
+countryInput.addEventListener('keydown', autocomplete.keyboardSelectCountry);
 // Listen for a click on a input
-searchCountry.addEventListener('click', autocomplete.clickInputCountry)
+countryInput.addEventListener('click', autocomplete.clickInputCountry)
 // Selecting country from list
 countryMatchList.addEventListener('click', autocomplete.selectCountry);
+
+countryMatchList.addEventListener('mouseenter', autocomplete.onMouseOver)
 
 
 

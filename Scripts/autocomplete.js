@@ -4,7 +4,12 @@ class Autocomplete {
    constructor() {
       // Api key
       this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
-      
+
+      // search input text
+      this.searchInputText;
+
+      this.childIndex = 0;
+
       // COUNTRY //
 
       // countries from json file
@@ -45,9 +50,11 @@ class Autocomplete {
 
    // Filter countries
    searchCountries = searchText => {
+      // set the text in input field
+      this.searchInputText = searchText;
       // Get matches to current text input
       this.countryMatches = this.countries.data.filter(country => {
-         if(searchText.length > 1) {
+         if (searchText.length > 0) {
             const regex = new RegExp(`^${searchText}`, 'gi');
             return country.country.match(regex);
          }
@@ -66,87 +73,255 @@ class Autocomplete {
    };
 
 
-   // Selecting country from suggestion list
-   selectCountry = (e) => {
-      // h5 element
-      if (e.target.classList.contains("child")) {
-         this.country = e.target.innerHTML;
+   // select country over keyboard
+   keyboardSelectCountry = (e) => {
+      // let currentListIndex = 0;
+
+      // ENTER KEY
+      if (e.keyCode === 13) {
+         // remove cursor when enter key is pressed
+         countryInput.blur();
+         // assign  
+         this.searchInputText = countryInput.value;
+         // if there are no matches on the list, the input value is always false
+         if (this.countryMatches.length === 0) {
+            countryInput.setAttribute("class", "form-control is-invalid");
+         } else {
+            let match = false;
+            this.countryMatches.forEach((country) => {
+               if(this.searchInputText.toLowerCase() === country.country.toLowerCase()){
+                  match = true;
+                  // set the country value by clicking on a dropdown list of countries
+                  this.country = country.country;
+   
+                  // add a completion style to input when selection is done
+                  countryInput.setAttribute("class", "form-control is-valid");
+   
+                  this.childIndex = 0;
+                  // show state input field
+                  stateForm.style.display = "block";
+   
+                  // reset the search list array
+                  this.countryMatches = [];
+                  // clear search list output
+                  this.outputHtmlCountry(this.countryMatches);
+   
+                  // get states
+                  // Serbia states are not complete in api
+                  if (this.country === "Serbia") {
+                     this.getSerbiaStates();
+                  } else {
+                     // get states of selected country
+                     this.getStates();
+                  }
+               } 
+               if(match === false) {
+                  countryInput.setAttribute("class", "form-control is-invalid");
+               }
+               
+            })
+
+         }
+
+            // for (let i = 0; i < this.countryMatches.length; i++) {
+            //    if (this.countryMatches[i].country.toLowerCase() === this.searchInputText.toLowerCase()) {
+            //       // console.log(this.countryMatches[this.childIndex - 1].country.toLowerCase());
+            //       // console.log(this.searchInputText.toLowerCase());
+            //       // (this.childIndex === 1) ? this.childIndex = 0 : this.childIndex = this.childIndex;
+            //       //  currentListIndex = i;
+
+            //       // set the country value by clicking on a dropdown list of countries
+            //       this.country = this.countryMatches[i].country;
+
+            //       // add a completion style to input when selection is done
+            //       countryInput.setAttribute("class", "form-control is-valid");
+
+            //       this.childIndex = 0;
+            //       // show state input field
+            //       stateForm.style.display = "block";
+
+            //       // reset the search list array
+            //       this.countryMatches = [];
+            //       // clear search list output
+            //       this.outputHtmlCountry(this.countryMatches);
+
+            //       // get states
+            //       // Serbia states are not complete in api
+            //       if (this.country === "Serbia") {
+            //          this.getSerbiaStates();
+            //       } else {
+            //          // get states of selected country
+            //          this.getStates();
+            //       }
+            //    } 
+                  
+            //    if (this.countryMatches[i].country.toLowerCase() !== this.searchInputText.toLowerCase()){
+            //          console.log(this.countryMatches[i].country.toLowerCase());
+            //          console.log(this.searchInputText.toLowerCase());
+            //          countryInput.setAttribute("class", "form-control is-invalid");
+            //    }
+            
+
+         // }
+         e.preventDefault();
       }
-      // parent div of h5 element
-      if (e.target.classList.contains("parent")) {
-         this.country = e.target.firstElementChild.innerHTML;
+      // DOWN ARROW KEY
+      if (e.keyCode === 40) {
+         console.log(this.countryMatches[this.childIndex].country)
+         console.log(this.childIndex);
+         
+         // return to the begin of the list
+         if (this.childIndex === countryMatchList.children.length - 1) {
+            console.log(this.childIndex);
+
+            this.childIndex = this.countryMatches.length - 1;
+         } else {
+            for (let i = 0; i < this.countryMatches.length; i++) {
+               // match the input name and list item to add style
+               if (countryInput.value.toLowerCase() === this.countryMatches[i].country.toLowerCase()) {
+                  this.childIndex = i + 1;
+               } 
+            } 
+         }
+         // assign input text to the countries from match list
+         countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
+
+            console.log(this.childIndex);
+            // add style to list item 
+            for (let i = 0; i < this.countryMatches.length; i++) {
+               // match the input name and list item to add style
+               if (this.countryMatches[i].country.toLowerCase() === countryInput.value.toLowerCase()) {
+                  // in case when it's not the first list item
+                  if (i !== 0) {
+                     // default style to previous list item
+                     countryMatchList.children[i - 1].setAttribute("class", "card card-body parent");
+                     // item that is bin selected
+                     countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+
+                  } else {
+                     // if its the first list item, set default style to the last element and add style to fist
+                     countryMatchList.children[this.countryMatches.length - 1].setAttribute("class", "card card-body parent");
+                     countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+                  }
+               }
+            }
+            e.preventDefault();
+         }
+         // UP ARROW KEY
+         if (e.keyCode === 38) {
+            // return to the begin of the list
+            console.log(this.childIndex);
+            if (this.childIndex === 0) {
+               // first list item
+               this.childIndex = 0;
+            } else {
+               if (countryMatchList.children[this.childIndex].children[0].innerText !== countryInput.value) {
+                  // if child index is 1, return the 0 element
+                  if (this.childIndex - 2 === -1) {
+                     this.childIndex = this.countryMatches.length - 1;
+                  } else {
+                     this.childIndex -= 2;
+                  }
+               } else {
+                  // going back
+                  this.childIndex -= 1;
+               }
+            }
+            console.log(this.childIndex);
+            console.log(this.countryMatches[this.childIndex].country)
+            // assign input text to the countries from match list
+            countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
+            // add style to list item 
+            for (let i = 0; i < this.countryMatches.length; i++) {
+               // match the input name and list item to add style
+               if (this.countryMatches[i].country.toLowerCase() === countryInput.value.toLowerCase()) {
+                  // in case when it's not the first list item
+                  if (i === this.countryMatches.length - 1) {
+                     countryMatchList.children[0].setAttribute("class", "card card-body parent");
+                     countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+                  } else {
+                     // default style to previous list item
+                     countryMatchList.children[i + 1].setAttribute("class", "card card-body parent");
+                     // item that is bin selected
+                     countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+
+                  }
+               }
+            }
+
+            e.preventDefault();
+         }
+
+         // BACKSPACE KEY
+         if (e.keyCode === 8) {
+            this.childIndex = 0;
+         }
       }
 
-      // set the country value by clicking on a dropdown list of countries
-      searchCountry.value = this.country;
-      
-      // add a completion style to input when selection is done
-      searchCountry.setAttribute("class", "form-control is-valid");
-      // reset the search list array
-      this.countryMatches = [];
-      // clear search list output
-      this.outputHtmlCountry(this.countryMatches);
 
-      // //////////////////////////////// STATE ////////////////////////////////////////
-      // Serbia states are not complete in api
-      if( this.country === "Serbia"){
-         this.getSerbiaStates();
-      } else {
-         // get states of selected country
-         this.getStates();
+      // Selecting country from suggestion list
+      selectCountry = (e) => {
+         // h5 element
+         if (e.target.classList.contains("child")) {
+            this.country = e.target.innerHTML;
+         }
+         // parent div of h5 element
+         if (e.target.classList.contains("parent")) {
+            this.country = e.target.firstElementChild.innerHTML;
+         }
+
+         // set the country value by clicking on a dropdown list of countries
+         countryInput.value = this.country;
+
+         // add a completion style to input when selection is done
+         countryInput.setAttribute("class", "form-control is-valid");
+
+         // show state input
+         stateForm.style.display = "block";
+         // reset the search list array
+         this.countryMatches = [];
+         // clear search list output
+         this.outputHtmlCountry(this.countryMatches);
+
+         // ////////////////////////////////    STATE    ////////////////////////////////////////
+         // Serbia states are not complete in api
+         if (this.country === "Serbia") {
+            this.getSerbiaStates();
+         } else {
+            // get states of selected country
+            this.getStates();
+         }
+
+         e.preventDefault();
       }
 
-      // create div to put form for states
-      const div = document.createElement('div');
-      div.setAttribute("id", "stateForm")
-      
-      // state input div
-      const state = `
-      <div class="form-group has-success">
-      <label class="form-control-label" for="state">State / Region</label>
-      <input type="text" id="stateInput" class="form-control" placeholder="Enter state" autocomplete="off"/>
-      </div>
-      <div id="state-match-list"></div>
-      `;
-      div.innerHTML = state;
-      // append state input div to a form
-      form.appendChild(div);
-      
-      // state input
-      const stateInput = document.getElementById("stateInput");
-      // listen for state input and search states
-      stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
 
-      // list of states of the selected country
-      const stateMatchList = document.getElementById("state-match-list");
-      // Select state from the list
-      stateMatchList.addEventListener('click', autocomplete.selectState);
-
-      stateInput.addEventListener('click', this.clickInputState);
-
-      this.stateMatch = stateMatchList;
-      this.stateInput = stateInput;
-
-
-      e.preventDefault();
-   }
-
-
-   // Show results in HTML COUNTRY
-   outputHtmlCountry = matches => {
-      if (matches.length > 0) {
-         const html = matches.map(match => `
+      // Show results in HTML COUNTRY
+      outputHtmlCountry = matches => {
+         if (matches.length > 0) {
+            const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.country}</h5>
          </div>
          `).join('');
 
 
-         countryMatchList.innerHTML = html;
-      } else {
-         countryMatchList.innerHTML = '';
+            countryMatchList.innerHTML = html;
+         } else {
+            countryMatchList.innerHTML = '';
+         }
       }
-   }
+
+      // Clicking on input will reset to input mode
+      clickInputCountry = e => {
+         if (e.target.classList.contains("is-valid")) {
+            stateForm.style.display = "none";
+            cityInput.style.display = "none";
+            countryInput.setAttribute("class", "form-control")
+            countryInput.value = '';
+
+         }
+      }
 
 
 
@@ -156,240 +331,242 @@ class Autocomplete {
 
 
 
-   // //////////////////////////////////////     STATE      ///////////////////////////////////////////
+      // //////////////////////////////////////     STATE      ///////////////////////////////////////////
 
-   getStates = async () => {
-      const res = await fetch(`https://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
-      this.states = await res.json()
-   };
+      getStates = async () => {
+         const res = await fetch(`https://api.airvisual.com/v2/states?country=${this.country}&key=${this.apiKey}`);
+         this.states = await res.json()
+      };
 
-   getSerbiaStates = async () => {
-      const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/serbia_states.json');
-      this.states = await res.json();
-   };
-
-
-   searchState = searchText => {
-      // Search state
-      const stateInput = document.getElementById("stateInput");
-      // Listen state input
-      stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
-      // Get matches to current text input
-      this.stateMatches = this.states.data.filter(state => {
-         const regex = new RegExp(`${searchText}`, 'gi');
-
-         return state.state.match(regex);
-
-      });
+      getSerbiaStates = async () => {
+         const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/serbia_states.json');
+         this.states = await res.json();
+      };
 
 
-      // Clear when input or matches are empty
-      if (searchText.length === 0) {
+      searchState = searchText => {
+         // state input
+         // listen for state input and search states
+         stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
+
+         // list of states of the selected country
+         const stateMatchList = document.getElementById("state-match-list");
+         // Select state from the list
+         stateMatchList.addEventListener('click', autocomplete.selectState);
+
+         stateInput.addEventListener('click', this.clickInputState);
+
+         this.stateMatch = stateMatchList;
+         this.stateInput = stateInput;
+         // Search state
+         const stateInput = document.getElementById("stateInput");
+         // Listen state input
+         stateInput.addEventListener('input', () => autocomplete.searchState(stateInput.value));
+         // Get matches to current text input
+         this.stateMatches = this.states.data.filter(state => {
+            const regex = new RegExp(`${searchText}`, 'gi');
+
+            return state.state.match(regex);
+
+         });
+
+
+         // Clear when input or matches are empty
+         if (searchText.length === 0) {
+            this.stateMatches = [];
+            this.stateMatch.innerHTML = '';
+         }
+
+         this.outputHtmlStates(this.stateMatches);
+
+      }
+
+      selectState = (e) => {
+         // h5 element
+         if (e.target.classList.contains("child")) {
+            this.states = e.target.innerHTML;
+         }
+         // parent div of h5 element
+         if (e.target.classList.contains("parent")) {
+            this.states = e.target.firstElementChild.innerHTML;
+         }
+
+         // search is set to match the state from the list
+         stateInput.value = this.states;
+         console.log(this.states);
+         // countries from the list are always valid
+         stateInput.setAttribute("class", "form-control is-valid");
+         // state is selected, no need of displaying a list
          this.stateMatches = [];
+         // clear the matching list
          this.stateMatch.innerHTML = '';
-      }
-
-      this.outputHtmlStates(this.stateMatches);
-
-   }
-
-   selectState = (e) => {
-      // h5 element
-      if (e.target.classList.contains("child")) {
-         this.states = e.target.innerHTML;
-      }
-      // parent div of h5 element
-      if (e.target.classList.contains("parent")) {
-         this.states = e.target.firstElementChild.innerHTML;
-      }
-
-      // search is set to match the state from the list
-      stateInput.value = this.states;
-      console.log(this.states);
-      // countries from the list are always valid
-      stateInput.setAttribute("class", "form-control is-valid");
-      // state is selected, no need of displaying a list
-      this.stateMatches = [];
-      // clear the matching list
-      this.stateMatch.innerHTML = '';
 
 
-      // ////////////////    CITIES     ////////////////////////
+         // ////////////////    CITIES     ////////////////////////
 
-      if(this.states === "Kosovo") {
-         this.getKosovoCities();
-      } else {
-         // get states of selected country
-         this.getCities();
-      }
+         if (this.states === "Kosovo") {
+            this.getKosovoCities();
+         } else {
+            // get states of selected country
+            this.getCities();
+         }
 
-      // city input div
-      const cityDiv = document.createElement('div');
-      cityDiv.setAttribute("id", "cityForm")
-      // city input
-      const city = `
+         // city input div
+         const cityDiv = document.createElement('div');
+         cityDiv.setAttribute("id", "cityForm")
+         // city input
+         const city = `
       <div class="form-group has-success">
       <label class="form-control-label" for="city / town"> City / Town</label>
       <input type="text" id="cityInput" class="form-control" placeholder="Enter city" autocomplete="off"/>
       </div>
       <div id="city-match-list"></div>
       `;
-      cityDiv.innerHTML = city;
-      // append city div to a form
-      form.appendChild(cityDiv);
+         cityDiv.innerHTML = city;
+         // append city div to a form
+         form.appendChild(cityDiv);
 
-      // input of a state form
-      const cityInput = document.getElementById("cityInput");
-      // listen for state input and search states
-      cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
+         // input of a state form
+         const cityInput = document.getElementById("cityInput");
+         // listen for state input and search states
+         cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
 
-      // list of states of the selected country
-      const cityMatchList = document.getElementById("city-match-list");
-      // Select state from the list
-      cityMatchList.addEventListener('click', autocomplete.selectCity);
+         // list of states of the selected country
+         const cityMatchList = document.getElementById("city-match-list");
+         // Select state from the list
+         cityMatchList.addEventListener('click', autocomplete.selectCity);
 
-      cityInput.addEventListener('click', this.clickInputCity);
+         cityInput.addEventListener('click', this.clickInputCity);
 
-      this.cityMatch = cityMatchList;
-      this.cityInput = cityInput;
+         this.cityMatch = cityMatchList;
+         this.cityInput = cityInput;
 
 
-      e.preventDefault();
+         e.preventDefault();
 
-   }
+      }
 
-   // Show results in HTML STATE
-   outputHtmlStates = matches => {
-      if (matches.length > 2) {
-         const html = matches.map(match => `
+      // Show results in HTML STATE
+      outputHtmlStates = matches => {
+         if (matches.length > 2) {
+            const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
-         this.stateMatch.innerHTML = html;
-      } else {
-         // if no input, clear search list
-         this.stateMatch.innerHTML = '';
-         stateInput.setAttribute("class", "form-control is-invalid");
+            this.stateMatch.innerHTML = html;
+         } else {
+            // if no input, clear search list
+            this.stateMatch.innerHTML = '';
+            stateInput.setAttribute("class", "form-control is-invalid");
+         }
       }
-   }
 
 
 
 
 
-   // ////////////////////         CITIES         //////////////////////////////
+      // ////////////////////         CITIES         //////////////////////////////
 
-   getCities = async () => {
-      const res = await fetch(`https://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
-      this.cities = await res.json()
-   };
-
-   
-   getKosovoCities = async () => {  
-      const res = await fetch(`https://alexkozelj.github.io/AirPollutionApp/serbia_cities.json`);
-      this.cities = await res.json()
-   };
-
-   searchCities = searchText => {
-      // Search state
-      const cityInput = document.getElementById("cityInput");
-      // Listen state input
-      cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
-      // Get matches to current text input
-      this.cityMatches = this.cities.data.filter(city => {
-         const regex = new RegExp(`${searchText}`, 'gi');
-
-         return city.city.match(regex);
-
-      });
+      getCities = async () => {
+         const res = await fetch(`https://api.airvisual.com/v2/cities?state=${this.states}&country=${this.country}&key=${this.apiKey}`);
+         this.cities = await res.json()
+      };
 
 
-      // Clear when input or matches are empty
-      if (searchText.length === 0) {
+      getKosovoCities = async () => {
+         const res = await fetch(`https://alexkozelj.github.io/AirPollutionApp/serbia_cities.json`);
+         this.cities = await res.json()
+      };
+
+      searchCities = searchText => {
+         // Search state
+         const cityInput = document.getElementById("cityInput");
+         // Listen state input
+         cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
+         // Get matches to current text input
+         this.cityMatches = this.cities.data.filter(city => {
+            const regex = new RegExp(`${searchText}`, 'gi');
+
+            return city.city.match(regex);
+
+         });
+
+
+         // Clear when input or matches are empty
+         if (searchText.length === 0) {
+            this.cityMatches = [];
+            this.cityMatch.innerHTML = '';
+         }
+
+         this.outputHtmlCities(this.cityMatches);
+
+      }
+
+
+      selectCity = (e) => {
+         // h5 element
+         if (e.target.classList.contains("child")) {
+            this.cities = e.target.innerHTML;
+         }
+         // parent div of h5 element
+         if (e.target.classList.contains("parent")) {
+            this.cities = e.target.firstElementChild.innerHTML;
+         }
+
+         // assign cities from search list
+         cityInput.value = this.cities;
+         // set valid style to input
+         cityInput.setAttribute("class", "form-control is-valid");
+         // city is selected, no need of displaying a list
          this.cityMatches = [];
+         // clear the matching list
          this.cityMatch.innerHTML = '';
+
       }
 
-      this.outputHtmlCities(this.cityMatches);
 
-   }
-
-
-   selectCity = (e) => {
-      // h5 element
-      if (e.target.classList.contains("child")) {
-         this.cities = e.target.innerHTML;
-      }
-      // parent div of h5 element
-      if (e.target.classList.contains("parent")) {
-         this.cities = e.target.firstElementChild.innerHTML;
-      }
-
-      // assign cities from search list
-      cityInput.value = this.cities;
-      // set valid style to input
-      cityInput.setAttribute("class", "form-control is-valid");
-      // city is selected, no need of displaying a list
-      this.cityMatches = [];
-      // clear the matching list
-      this.cityMatch.innerHTML = '';
-
-   }
-
-
-   // Show results in HTML CITY
-   outputHtmlCities = matches => {
-      if (matches.length > 2) {
-         const html = matches.map(match => `
+      // Show results in HTML CITY
+      outputHtmlCities = matches => {
+         if (matches.length > 2) {
+            const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.city}</h5>
          </div>
          `).join('');
 
 
-         this.cityMatch.innerHTML = html;
-      } else {
-         this.cityMatch.innerHTML = '';
-      }
-   }
-
-
-
-   // Clicking on input will reset to input mode
-   clickInputCountry = e => {
-      if (e.target.classList.contains("is-valid")) {
-         searchCountry.setAttribute("class", "form-control")
-         searchCountry.value = '';
-         this.removeElement("stateForm");
-         const cityInput = document.getElementById("cityForm");
-         if(cityInput !== null){
-            this.removeElement("cityForm");
+            this.cityMatch.innerHTML = html;
+         } else {
+            this.cityMatch.innerHTML = '';
          }
       }
-   }
 
-   clickInputState = e => {
-      if (e.target.classList.contains("is-valid") && e.target.id === "stateInput") {
-         this.stateInput.setAttribute("class", "form-control");
-         this.stateInput.value = '';
-         this.removeElement("cityForm");
-         this.getCountries();
-         this.getStates();
+
+
+
+
+      clickInputState = e => {
+         if (e.target.classList.contains("is-valid") && e.target.id === "stateInput") {
+            this.stateInput.setAttribute("class", "form-control");
+            this.stateInput.value = '';
+            this.removeElement("cityForm");
+            this.getCountries();
+            this.getStates();
+         }
+      }
+
+      clickInputCity = e => {
+         if (e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
+            this.cityInput.setAttribute("class", "form-control");
+            this.cityInput.value = '';
+            this.getCities();
+         }
+      }
+      // remove element by id
+      removeElement = elementId => {
+         // Removes an element from the document
+         const element = document.getElementById(elementId);
+         element.parentNode.removeChild(element);
       }
    }
-
-   clickInputCity = e => {
-      if (e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
-         this.cityInput.setAttribute("class", "form-control");
-         this.cityInput.value = '';
-         this.getCities();
-      }
-   }
-   // remove element by id
-   removeElement = elementId => {
-      // Removes an element from the document
-      const element = document.getElementById(elementId);
-      element.parentNode.removeChild(element);
-   }
-}

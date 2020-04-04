@@ -90,6 +90,10 @@ img {
   position: absolute;
   width: 100%; }
 
+#state-match-list {
+  position: absolute;
+  width: 100%; }
+
 #spinner:not([hidden]) {
   position: fixed;
   top: 0;

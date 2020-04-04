@@ -113,6 +113,11 @@ img {
    width: 100%;
 }
 
+#state-match-list {
+   position: absolute;
+   width: 100%;
+}
+
 // //////    Spinner styling  ///////////
 #spinner:not([hidden]) {
    position: fixed;

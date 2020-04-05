@@ -127,6 +127,10 @@ img {
    margin: 1rem;
 }
 
+.alert-dismissible {
+   padding-right: 1.25rem;
+}
+
 // //////    Spinner styling  ///////////
 #spinner:not([hidden]) {
    position: fixed;

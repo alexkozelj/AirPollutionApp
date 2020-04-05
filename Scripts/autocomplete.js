@@ -330,7 +330,7 @@ class Autocomplete {
       this.stateMatches = this.states.data.filter(state => {
          // console.log(state);
          // match more than 1 letter
-         if (searchText.length > 0) {
+         if (searchText.length > 1) {
             const regex = new RegExp(`${searchText}`, 'gi');
             return state.state.match(regex);
          }

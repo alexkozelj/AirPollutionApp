@@ -118,6 +118,15 @@ img {
    width: 100%;
 }
 
+#modal-info {
+   display: none;
+   // width: 90%;
+}
+
+.alert {
+   margin: 1rem;
+}
+
 // //////    Spinner styling  ///////////
 #spinner:not([hidden]) {
    position: fixed;

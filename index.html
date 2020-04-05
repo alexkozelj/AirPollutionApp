@@ -60,6 +60,8 @@
                      <label class="form-control-label" for="country">Country</label>
                      <input type="text" id="countryInput" class="form-control" placeholder="Enter Country"
                         autocomplete="notWorkingOff" />
+                     <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+                     <input style="display:none" type="text" name="fakeusernameremembered" />
                   </div>
                   <div id="country-match-list"></div>
 
@@ -74,11 +76,19 @@
                   <!-- City -->
                   <div class="form-group" style="display: none;" id="city-form">
                      <label class="col-form-label" for="inputDefault">Enter City</label>
-                     <input type="text" class="form-control" placeholder="Enter City" id="cityInput">
+                     <input type="text" class="form-control" placeholder="Enter City" id="cityInput"
+                        autocomplete="notWorkingOff" />
                   </div>
                   <div id="city-match-list"></div>
-
+                  <div id="modal-info">
+                     <div class="alert alert-dismissible alert-primary" >
+                        <strong>Oh snap!</strong> Fill all fields or choose country/state/city from a drop down list and
+                        try again.
+                     </div>
+                  </div>
             </div>
+
+
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close

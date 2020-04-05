@@ -106,6 +106,8 @@ class Autocomplete {
                   this.childIndex = 0;
                   // show state input field
                   stateForm.style.display = "block";
+                  // hide modal info if there
+                  modalInfo.style.display = "none";
 
                   // reset the search list array
                   this.countryMatches = [];
@@ -238,6 +240,9 @@ class Autocomplete {
 
       // show state input
       stateForm.style.display = "block";
+      // hide modal info if there
+      modalInfo.style.display = "none";
+
       // set focus to state input field
       stateInput.focus();
       // reset the search list array
@@ -278,6 +283,8 @@ class Autocomplete {
       if (e.target.classList.contains("is-valid") && e.target.id === "countryInput" || e.target.classList.contains("is-invalid") && e.target.id === "countryInput") {
          stateForm.style.display = "none";
          cityForm.style.display = "none";
+         // hide modal info if there
+         modalInfo.style.display = "none";
          countryInput.setAttribute("class", "form-control");
          stateInput.setAttribute("class", "form-control");
          cityInput.setAttribute("class", "form-control");
@@ -314,7 +321,7 @@ class Autocomplete {
       this.searchInputText = searchText;
       // Get matches to current text input
       this.stateMatches = this.states.data.filter(state => {
-         console.log(state);
+         // console.log(state);
          // match more than 1 letter
          if (searchText.length > 1) {
             const regex = new RegExp(`${searchText}`, 'gi');
@@ -338,13 +345,12 @@ class Autocomplete {
 
 
    keyboardSelectState = (e) => {
-      // let currentListIndex = 0;
 
       // ENTER KEY
       if (e.keyCode === 13) {
          // remove cursor when enter key is pressed
          stateInput.blur();
-         // assign  
+         // assign global var to a input var
          this.searchInputText = stateInput.value;
          // if there are no matches on the list, the input value is always false
          if (this.stateMatches.length === 0) {
@@ -356,22 +362,27 @@ class Autocomplete {
             this.stateMatches.forEach((state) => {
                // if there is a match
                if (this.searchInputText.toLowerCase() === state.state.toLowerCase()) {
+                  // match is found
                   match = true;
-
-                  // set the country value by clicking on a dropdown list of countries
+                  // set the value by clicking on a dropdown list 
                   this.stateInput = state.state;
 
                   // add a completion style to input when selection is done
                   stateInput.setAttribute("class", "form-control is-valid");
                   // reset a index for a next search
                   this.childIndex = 0;
-                  // show state input field
+                  // show city input field
                   cityForm.style.display = "block";
+                  // hide modal info if there
+                  modalInfo.style.display = "none";
 
                   // reset the search list array
                   this.stateMatches = [];
                   // clear search list output
                   this.outputHtmlStates(this.stateMatches);
+
+                  // set focus to next input field
+                  cityInput.focus();
 
                   // GET CITIES for a selected state
                   // Serbia states are not complete in api
@@ -434,6 +445,7 @@ class Autocomplete {
          }
          e.preventDefault();
       }
+
       // UP ARROW KEY
       if (e.keyCode === 38) {
          // stays at the first element
@@ -494,19 +506,19 @@ class Autocomplete {
 
       // search is set to match the state from the list
       stateInput.value = this.stateInput;
-
       // countries from the list are always valid
       stateInput.setAttribute("class", "form-control is-valid");
-
       // show city input
       cityForm.style.display = "block";
+      // set focus to next input field
+      cityInput.focus();
       // state is selected, no need of displaying a list
       this.stateMatches = [];
       // clear search list output
       this.outputHtmlStates(this.stateMatches);
 
 
-      // ////////////////    CITIES     ////////////////////////
+      //  CITIES  //
 
       if (this.stateInput === "Kosovo") {
          this.getKosovoCities();
@@ -528,6 +540,7 @@ class Autocomplete {
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
+
          stateMatchList.innerHTML = html;
       } else {
          // if no input, clear search list
@@ -536,14 +549,15 @@ class Autocomplete {
    }
 
    clickInputState = e => {
-      if (e.target.classList.contains("is-valid") && e.target.id === "stateInput" && e.target.classList.contains("is-valid") && e.target.id === "stateInput") {
+      if (e.target.classList.contains("is-valid") && e.target.id === "stateInput" || e.target.classList.contains("is-invalid") && e.target.id === "stateInput") {
          stateInput.setAttribute("class", "form-control");
+         cityInput.setAttribute("class", "form-control");
          cityForm.style.display = "none";
+         // hide modal info if there
+         modalInfo.style.display = "none";
          cityMatchList.innerHTML = '';
          stateInput.value = '';
          cityInput.value = '';
-         // this.getStates();
-
       }
    }
 
@@ -556,6 +570,7 @@ class Autocomplete {
    getCities = async () => {
       const res = await fetch(`https://api.airvisual.com/v2/cities?state=${this.stateInput}&country=${this.countryInput}&key=${this.apiKey}`);
       this.cities = await res.json()
+      console.log(this.cities);
    };
 
 
@@ -564,24 +579,23 @@ class Autocomplete {
       this.cities = await res.json()
    };
 
-   searchCities = searchText => {
-      // Search state
-      const cityInput = document.getElementById("cityInput");
-      // Listen state input
-      cityInput.addEventListener('input', () => autocomplete.searchCities(cityInput.value));
+   searchCity = searchText => {
+      // set the text in input field
+      this.searchInputText = searchText;
       // Get matches to current text input
       this.cityMatches = this.cities.data.filter(city => {
-         const regex = new RegExp(`${searchText}`, 'gi');
-
-         return city.city.match(regex);
-
+         console.log(city);
+         if (searchText.length > 1) {
+            const regex = new RegExp(`${searchText}`, 'gi');
+            return city.city.match(regex);
+         }
       });
 
-
+      console.log(this.cityMatches);
       // Clear when input or matches are empty
       if (searchText.length === 0) {
          this.cityMatches = [];
-         this.cityMatch.innerHTML = '';
+         cityMatchList.innerHTML = '';
       }
 
       this.outputHtmlCities(this.cityMatches);
@@ -589,61 +603,190 @@ class Autocomplete {
    }
 
 
+
+
+   keyboardSelectCity = (e) => {
+
+      // ENTER KEY
+      if (e.keyCode === 13) {
+         // remove cursor when enter key is pressed
+         cityInput.blur();
+         // assign global var to input value
+         this.searchInputText = cityInput.value;
+         // if there are no matches on the list, the input value is always false
+         if (this.cityMatches.length === 0) {
+            cityInput.setAttribute("class", "form-control is-invalid");
+         } else {
+            // if there is a match, assign to true
+            let match = false;
+            // go through a list to find a match with input field
+            this.cityMatches.forEach((city) => {
+               // if there is a match
+               if (this.searchInputText.toLowerCase() === city.city.toLowerCase()) {
+                  // match is found
+                  match = true;
+                  // set the value by clicking on a dropdown list
+                  this.cityInput = city.city;
+
+                  // hide modal info if there
+                  modalInfo.style.display = "none";
+
+                  // add a completion style to input when selection is done
+                  cityInput.setAttribute("class", "form-control is-valid");
+                  // reset a index for a next search
+                  this.childIndex = 0;
+
+                  // reset the search list array
+                  this.cityMatches = [];
+                  // clear search list output
+                  this.outputHtmlCities(this.cityMatches);
+
+               }
+
+               if (match === false) {
+                  cityInput.setAttribute("class", "form-control is-invalid");
+               }
+
+            })
+
+         }
+
+         e.preventDefault();
+      }
+
+
+      // DOWN ARROW KEY
+      if (e.keyCode === 40) {
+
+         // end of a list
+         if (this.childIndex === cityMatchList.children.length - 1) {
+            // stay at the last li
+            this.childIndex = this.cityMatches.length - 1;
+         } else {
+            // need a loop while up arrow key changes child index
+            for (let i = 0; i < this.cityMatches.length; i++) {
+               // match the input name and list item to add style
+               if (cityInput.value.toLowerCase() === this.cityMatches[i].city.toLowerCase()) {
+                  this.childIndex = i + 1;
+               }
+            }
+         }
+         // assign input text from match list
+         cityInput.value = cityMatchList.children[this.childIndex].children[0].innerText;
+
+         // add style to list item 
+         for (let i = 0; i < this.cityMatches.length; i++) {
+            // match the input name and list item to add style
+            if (this.cityMatches[i].city.toLowerCase() === cityInput.value.toLowerCase()) {
+               // in case when it's not the first list item
+               if (i !== 0) {
+                  // default style to previous list item
+                  cityMatchList.children[i - 1].setAttribute("class", "card card-body parent");
+                  // item that is bin selected
+                  cityMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+
+               } else {
+                  // if its the first list item, set default style to the last element and add style to fist
+                  cityMatchList.children[this.cityMatches.length - 1].setAttribute("class", "card card-body parent");
+                  cityMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+               }
+            }
+         }
+         e.preventDefault();
+      }
+
+      // UP ARROW KEY
+      if (e.keyCode === 38) {
+         // stays at the first element
+         if (this.childIndex === 0) {
+            // first list item
+            this.childIndex = 0;
+         } else {
+            // going back
+            this.childIndex -= 1;
+         }
+
+         // assign input text to the countries from match list
+         cityInput.value = cityMatchList.children[this.childIndex].children[0].innerText;
+         // add style to list item 
+         for (let i = 0; i < this.cityMatches.length; i++) {
+            // match the input name and list item to add style
+            if (this.cityMatches[i].city.toLowerCase() === cityInput.value.toLowerCase()) {
+               // in case when it's not the first list item
+               if (i === this.cityMatches.length - 1) {
+                  cityMatchList.children[0].setAttribute("class", "card card-body parent");
+                  cityMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+               } else {
+                  // default style to previous list item
+                  cityMatchList.children[i + 1].setAttribute("class", "card card-body parent");
+                  // item that is bin selected
+                  cityMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
+
+               }
+            }
+         }
+
+         e.preventDefault();
+      }
+
+      // BACKSPACE KEY
+      if (e.keyCode === 8) {
+         // reset
+         this.childIndex = 0;
+      }
+   }
+
+
+
+
+
    selectCity = (e) => {
       // h5 element
       if (e.target.classList.contains("child")) {
-         this.cities = e.target.innerHTML;
+         this.cityInput = e.target.innerHTML;
       }
       // parent div of h5 element
       if (e.target.classList.contains("parent")) {
-         this.cities = e.target.firstElementChild.innerHTML;
+         this.cityInput = e.target.firstElementChild.innerHTML;
       }
 
       // assign cities from search list
-      cityInput.value = this.cities;
+      cityInput.value = this.cityInput;
       // set valid style to input
       cityInput.setAttribute("class", "form-control is-valid");
       // city is selected, no need of displaying a list
       this.cityMatches = [];
       // clear the matching list
-      this.cityMatch.innerHTML = '';
+      this.outputHtmlCities(this.cityMatches);
 
    }
 
 
    // Show results in HTML CITY
    outputHtmlCities = matches => {
-      if (matches.length > 2) {
+      console.log(matches);
+      if (matches.length > 0) {
          const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.city}</h5>
          </div>
          `).join('');
 
-
-         this.cityMatch.innerHTML = html;
+         cityMatchList.innerHTML = html;
       } else {
-         this.cityMatch.innerHTML = '';
+         cityMatchList.innerHTML = '';
       }
    }
-
-
-
-
-
 
 
    clickInputCity = e => {
-      if (e.target.classList.contains("is-valid") && e.target.id === "cityInput") {
-         this.cityInput.setAttribute("class", "form-control");
-         this.cityInput.value = '';
-         this.getCities();
+      if (e.target.classList.contains("is-valid") && e.target.id === "cityInput" || e.target.classList.contains("is-invalid") && e.target.id === "cityInput") {
+         cityInput.setAttribute("class", "form-control");
+         // hide modal info if there
+         modalInfo.style.display = "none";
+         cityMatchList.innerHTML = '';
+         cityInput.value = '';
       }
    }
-   // remove element by id
-   removeElement = elementId => {
-      // Removes an element from the document
-      const element = document.getElementById(elementId);
-      element.parentNode.removeChild(element);
-   }
+
 }

@@ -94,6 +94,12 @@ img {
   position: absolute;
   width: 100%; }
 
+#modal-info {
+  display: none; }
+
+.alert {
+  margin: 1rem; }
+
 #spinner:not([hidden]) {
   position: fixed;
   top: 0;

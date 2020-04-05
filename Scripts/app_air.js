@@ -85,31 +85,74 @@ stateInput.addEventListener('click', autocomplete.clickInputState)
 // Selecting state from list
 stateMatchList.addEventListener('click', autocomplete.selectState);
 
+// CITY
+// Listen city input
+cityInput.addEventListener('input', () => autocomplete.searchCity(cityInput.value));
+// Listen for city input keydown
+cityInput.addEventListener('keydown', autocomplete.keyboardSelectCity);
+// Listen for a click on a input
+cityInput.addEventListener('click', autocomplete.clickInputCity);
+// Select city from a list
+cityMatchList.addEventListener('click', autocomplete.selectCity);
+
 
 // //////////////////////////// MODAL //////////////////////////
 
 // Modal form element
 const form = document.getElementById("form");
 
+const modalInfo = document.getElementById("modal-info");
+
+
+// /////////////////// MODAL SAVE CHANGES BUTTON /////////////////
+
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
+   console.log(autocomplete.countryInput);
+   console.log(autocomplete.stateInput);
+   console.log(autocomplete.cityInput);
 
-   let city = autocomplete.cities;
-   let state = autocomplete.states;
-   let country = autocomplete.country;
-
-   // Change location
-   weather.changeLocation(city, state, country);
-
-   // Set location in LS
-   storage.setLocationData(city, state, country);
-
-   // Get and display weather
-   getWeather();
+   let city = autocomplete.cityInput;
+   let state = autocomplete.stateInput;
+   let country = autocomplete.countryInput;
 
 
-   // Close modal
-   $('#locModal').modal('hide');
+
+   if( city === undefined || state === undefined || country === undefined) {
+
+      city === undefined ? cityInput.setAttribute("class", "form-control is-invalid") : cityInput.setAttribute("class", "form-control is-valid");
+      state === undefined ? stateInput.setAttribute("class", "form-control is-invalid") : stateInput.setAttribute("class", "form-control is-valid");
+      country === undefined ? countryInput.setAttribute("class", "form-control is-invalid") : countryInput.setAttribute("class", "form-control is-valid");
+
+      modalInfo.style.display = "block";
+
+   } 
+   else if (countryInput.value === '') {
+      // Close modal
+      $('#locModal').modal('hide');
+   }
+   else {
+      // Change location
+      weather.changeLocation(city, state, country);
+   
+      // Set location in LS
+      storage.setLocationData(city, state, country);
+   
+      // Get and display weather
+      getWeather();
+
+      // cityInput.setAttribute("class", "form-control");
+      // cityInput.value = '';
+      // stateInput.setAttribute("class", "form-control");
+      // stateInput.value = '';
+      // countryInput.setAttribute("class", "form-control");
+      // countryInput.value = '';
+   
+      // Close modal
+      $('#locModal').modal('hide');
+
+   }
+
 });
 
 

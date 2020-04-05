@@ -26,25 +26,6 @@ class Weather {
       }
    }
 
-   // get countries from local json file
-   // async getCountry() {
-
-   //    const response = await fetch(`https://api.airvisual.com/v2/countries?key=${this.apiKey}`);
-   //    let countries = [];
-
-   //    await response.json()
-   //       .then(data => {
-   //          for (let i = 0; i < data.data.length; i++) {
-   //             let country = data.data[i].country;
-   //             countries.push(country)
-   //          }
-
-   //       });
-
-   //    return countries;
-
-   // }
-
    // change location collected from modal
    changeLocation(city, state, country) {
       

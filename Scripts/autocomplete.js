@@ -129,6 +129,7 @@ class Autocomplete {
 
                if (match === false) {
                   countryInput.setAttribute("class", "form-control is-invalid");
+                  countryMatchList.innerHTML = '';
                }
 
             })
@@ -288,10 +289,16 @@ class Autocomplete {
          countryInput.setAttribute("class", "form-control");
          stateInput.setAttribute("class", "form-control");
          cityInput.setAttribute("class", "form-control");
+         cityMatchList.innerHTML = '';
          stateMatchList.innerHTML = '';
+         countryMatchList.innerHTML = '';
          countryInput.value = '';
          stateInput.value = '';
          cityInput.value = '';
+         this.cityInput = undefined;
+         this.stateInput = undefined;
+         this.countryInput = undefined;
+         this.searchInputText = undefined;
       }
    }
 
@@ -323,7 +330,7 @@ class Autocomplete {
       this.stateMatches = this.states.data.filter(state => {
          // console.log(state);
          // match more than 1 letter
-         if (searchText.length > 1) {
+         if (searchText.length > 0) {
             const regex = new RegExp(`${searchText}`, 'gi');
             return state.state.match(regex);
          }
@@ -396,6 +403,7 @@ class Autocomplete {
 
                if (match === false) {
                   stateInput.setAttribute("class", "form-control is-invalid");
+                  stateMatchList.innerHTML = '';
                }
 
             })
@@ -556,8 +564,12 @@ class Autocomplete {
          // hide modal info if there
          modalInfo.style.display = "none";
          cityMatchList.innerHTML = '';
+         stateMatchList.innerHTML = '';
          stateInput.value = '';
          cityInput.value = '';
+         this.cityInput = undefined;
+         this.stateInput = undefined;
+         this.searchInputText = undefined;
       }
    }
 
@@ -645,6 +657,7 @@ class Autocomplete {
 
                if (match === false) {
                   cityInput.setAttribute("class", "form-control is-invalid");
+                  cityMatchList.innerHTML = '';
                }
 
             })
@@ -786,6 +799,8 @@ class Autocomplete {
          modalInfo.style.display = "none";
          cityMatchList.innerHTML = '';
          cityInput.value = '';
+         this.cityInput = undefined;
+         this.searchInputText = undefined;
       }
    }
 

@@ -141,6 +141,10 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
       // Get and display weather
       getWeather();
 
+      autocomplete.cityInput.value = '';
+      autocomplete.stateInput.value = '';
+      autocomplete.countryInput.value = '';
+      autocomplete.searchInputText.value = '';
       // cityInput.setAttribute("class", "form-control");
       // cityInput.value = '';
       // stateInput.setAttribute("class", "form-control");

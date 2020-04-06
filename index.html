@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,11 +7,8 @@
    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css" />
    <link rel="stylesheet" href="style\css_air.css">
    <title>AirPollutionApp</title>
-
 </head>
-
 <body>
-   <!-- pushes everything to the middle -->
    <div class="container">
       <div class="row">
          <div hidden id="spinner"></div>
@@ -80,15 +76,19 @@
                         autocomplete="notWorkingOff" />
                   </div>
                   <div id="city-match-list"></div>
+
+                  <!-- Validation Info -->
                   <div id="modal-info">
                      <div class="alert alert-dismissible alert-primary">
-                        <strong>Oh snap!</strong> Fill all fields or choose country/state/city from a drop down list and
+                        <strong>Oh snap!</strong> Please choose country/state/city from a drop down list and
                         try again.
+                        <br>
+                        <i><strong>Note!</strong> Some countries/states/cities are not available.</i>
                      </div>
                   </div>
             </div>
 
-
+            <!-- Modal footer -->
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close
@@ -112,7 +112,6 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"></script>
 
-
    <script src="Scripts\autocomplete.js"></script>
    <script src="Scripts\spinner.js"></script>
    <script src="Scripts\weather_air.js"></script>
@@ -120,5 +119,4 @@
    <script src="Scripts\ui_air.js"></script>
    <script src="Scripts\app_air.js"></script>
 </body>
-
 </html>

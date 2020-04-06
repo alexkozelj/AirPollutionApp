@@ -42,13 +42,12 @@ class Autocomplete {
 
 
    // ///////////////////////////       COUNTRY       ///////////////////////////////
-
+   // get countries from api server
    getCountries = async () => {
       const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/countries.json');
       // console.log(res);
       this.countries = await res.json();
    };
-
 
    // Filter countries
    searchCountries = searchText => {
@@ -60,10 +59,7 @@ class Autocomplete {
             const regex = new RegExp(`^${searchText}`, 'gi');
             return country.country.match(regex);
          }
-
       });
-
-
       // Clear when input or matches are empty
       if (searchText.length === 0) {
          this.countryMatches = [];
@@ -71,19 +67,15 @@ class Autocomplete {
       }
 
       this.outputHtmlCountry(this.countryMatches);
-
    };
-
 
    // select country over keyboard
    keyboardSelectCountry = (e) => {
-      // let currentListIndex = 0;
-
       // ENTER KEY
       if (e.keyCode === 13) {
          // remove cursor when enter key is pressed
          countryInput.blur();
-         // assign  
+         // assign input text
          this.searchInputText = countryInput.value;
          // if there are no matches on the list, the input value is always false
          if (this.countryMatches.length === 0) {
@@ -96,10 +88,8 @@ class Autocomplete {
                // if there is a match
                if (this.searchInputText.toLowerCase() === country.country.toLowerCase()) {
                   match = true;
-
                   // set the country value by clicking on a dropdown list of countries
                   this.countryInput = country.country;
-
                   // add a completion style to input when selection is done
                   countryInput.setAttribute("class", "form-control is-valid");
                   // reset a index for a next search
@@ -126,24 +116,18 @@ class Autocomplete {
                      this.getStates();
                   }
                }
-
+               // if there are no match, show invalid form style
                if (match === false) {
                   countryInput.setAttribute("class", "form-control is-invalid");
                   countryMatchList.innerHTML = '';
                }
-
             })
-
          }
-
          e.preventDefault();
       }
 
-
       // DOWN ARROW KEY
       if (e.keyCode === 40) {
-         // console.log(this.countryMatches[this.childIndex].country)
-
          // end of a list
          if (this.childIndex === countryMatchList.children.length - 1) {
             // stay at the last li
@@ -159,7 +143,6 @@ class Autocomplete {
          }
          // assign input text to the countries from match list
          countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
-
          // add style to list item 
          for (let i = 0; i < this.countryMatches.length; i++) {
             // match the input name and list item to add style
@@ -170,7 +153,6 @@ class Autocomplete {
                   countryMatchList.children[i - 1].setAttribute("class", "card card-body parent");
                   // item that is bin selected
                   countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
-
                } else {
                   // if its the first list item, set default style to the last element and add style to fist
                   countryMatchList.children[this.countryMatches.length - 1].setAttribute("class", "card card-body parent");
@@ -180,6 +162,7 @@ class Autocomplete {
          }
          e.preventDefault();
       }
+
       // UP ARROW KEY
       if (e.keyCode === 38) {
          // stays at the first element
@@ -190,7 +173,6 @@ class Autocomplete {
             // going back
             this.childIndex -= 1;
          }
-
          // assign input text to the countries from match list
          countryInput.value = countryMatchList.children[this.childIndex].children[0].innerText;
          // add style to list item 
@@ -206,11 +188,9 @@ class Autocomplete {
                   countryMatchList.children[i + 1].setAttribute("class", "card card-body parent");
                   // item that is bin selected
                   countryMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
-
                }
             }
          }
-
          e.preventDefault();
       }
 
@@ -220,7 +200,6 @@ class Autocomplete {
          this.childIndex = 0;
       }
    }
-
 
    // Selecting country from suggestion list
    selectCountry = (e) => {
@@ -233,37 +212,37 @@ class Autocomplete {
          this.countryInput = e.target.firstElementChild.innerText;
       }
 
-      // set the country value by clicking on a dropdown list of countries
-      countryInput.value = this.countryInput;
-
-      // add a completion style to input when selection is done
-      countryInput.setAttribute("class", "form-control is-valid");
-
-      // show state input
-      stateForm.style.display = "block";
-      // hide modal info if there
-      modalInfo.style.display = "none";
-
-      // set focus to state input field
-      stateInput.focus();
-      // reset the search list array
-      this.countryMatches = [];
-      // clear search list output
-      this.outputHtmlCountry(this.countryMatches);
-
-      // ////////////////////////////////    STATE    ////////////////////////////////////////
-
-      // Serbia states are not complete in api
-      if (this.countryInput === "Serbia") {
-         this.getSerbiaStates();
+      if (this.countryInput === undefined) {
+         countryInput.value = '';
+         countryInput.setAttribute("class", "form-control is-invalid");
       } else {
-         // get states of selected country
-         this.getStates();
-      }
+         // set the country value by clicking on a dropdown list of countries
+         countryInput.value = this.countryInput;
+         // add a completion style to input when selection is done
+         countryInput.setAttribute("class", "form-control is-valid");
+         // show state input
+         stateForm.style.display = "block";
+         // hide modal info if there
+         modalInfo.style.display = "none";
 
+         // set focus to state input field
+         stateInput.focus();
+         // reset the search list array
+         this.countryMatches = [];
+         // clear search list output
+         this.outputHtmlCountry(this.countryMatches);
+
+         // ////////////   STATE    //////////////
+         // Serbia states are not complete in api
+         if (this.countryInput === "Serbia") {
+            this.getSerbiaStates();
+         } else {
+            // get states of selected country
+            this.getStates();
+         }
+      }
       e.preventDefault();
    }
-
 
    // Show results in HTML COUNTRY
    outputHtmlCountry = matches => {
@@ -303,26 +282,18 @@ class Autocomplete {
    }
 
 
-
-
-
-
-
-
-
    // //////////////////////////////////////     STATE      ///////////////////////////////////////////
-
+   // get states from server api
    getStates = async () => {
       const res = await fetch(`https://api.airvisual.com/v2/states?country=${this.countryInput}&key=${this.apiKey}`);
       this.states = await res.json()
    };
-
+   // get serbia states
    getSerbiaStates = async () => {
       const res = await fetch('https://alexkozelj.github.io/AirPollutionApp/serbia_states.json');
       this.states = await res.json();
    };
-
-
+   // search states through input text
    searchState = searchText => {
       // set the text in input field
       this.searchInputText = searchText;
@@ -334,19 +305,13 @@ class Autocomplete {
             const regex = new RegExp(`${searchText}`, 'gi');
             return state.state.match(regex);
          }
-
       });
-
-      console.log(this.stateMatches);
-
       // Clear when input or matches are empty
       if (searchText.length === 0) {
          this.stateMatches = [];
          stateMatchList.innerHTML = '';
       }
-
       this.outputHtmlStates(this.stateMatches);
-
    }
 
 
@@ -400,23 +365,18 @@ class Autocomplete {
                      this.getCities();
                   }
                }
-
+               // no match
                if (match === false) {
                   stateInput.setAttribute("class", "form-control is-invalid");
                   stateMatchList.innerHTML = '';
                }
-
             })
-
          }
-
          e.preventDefault();
       }
 
-
       // DOWN ARROW KEY
       if (e.keyCode === 40) {
-
          // end of a list
          if (this.childIndex === stateMatchList.children.length - 1) {
             // stay at the last li
@@ -432,7 +392,6 @@ class Autocomplete {
          }
          // assign input text to the countries from match list
          stateInput.value = stateMatchList.children[this.childIndex].children[0].innerText;
-
          // add style to list item 
          for (let i = 0; i < this.stateMatches.length; i++) {
             // match the input name and list item to add style
@@ -443,7 +402,6 @@ class Autocomplete {
                   stateMatchList.children[i - 1].setAttribute("class", "card card-body parent");
                   // item that is bin selected
                   stateMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
-
                } else {
                   // if its the first list item, set default style to the last element and add style to fist
                   stateMatchList.children[this.stateMatches.length - 1].setAttribute("class", "card card-body parent");
@@ -464,7 +422,6 @@ class Autocomplete {
             // going back
             this.childIndex -= 1;
          }
-
          // assign input text to the countries from match list
          stateInput.value = stateMatchList.children[this.childIndex].children[0].innerText;
          // add style to list item 
@@ -480,11 +437,9 @@ class Autocomplete {
                   stateMatchList.children[i + 1].setAttribute("class", "card card-body parent");
                   // item that is bin selected
                   stateMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
-
                }
             }
          }
-
          e.preventDefault();
       }
 
@@ -495,13 +450,7 @@ class Autocomplete {
       }
    }
 
-
-
-
-
-
-
-
+   // select state by click
    selectState = (e) => {
       // h5 element
       if (e.target.classList.contains("child")) {
@@ -509,46 +458,45 @@ class Autocomplete {
       }
       // parent div of h5 element
       if (e.target.classList.contains("parent")) {
-         this.stateInput = e.target.firstElementChild.innerHTML;
+         this.stateInput = e.target.firstElementChild.innerText;
       }
-
       // search is set to match the state from the list
-      stateInput.value = this.stateInput;
-      // countries from the list are always valid
-      stateInput.setAttribute("class", "form-control is-valid");
-      // show city input
-      cityForm.style.display = "block";
-      // set focus to next input field
-      cityInput.focus();
-      // state is selected, no need of displaying a list
-      this.stateMatches = [];
-      // clear search list output
-      this.outputHtmlStates(this.stateMatches);
-
-
-      //  CITIES  //
-
-      if (this.stateInput === "Kosovo") {
-         this.getKosovoCities();
+      if (this.stateInput === undefined) {
+         stateInput.value = '';
+         stateInput.setAttribute("class", "form-control is-invalid");
       } else {
-         // get states of selected country
-         this.getCities();
+
+         stateInput.value = this.stateInput;
+         // countries from the list are always valid
+         stateInput.setAttribute("class", "form-control is-valid");
+         // show city input
+         cityForm.style.display = "block";
+         // set focus to next input field
+         cityInput.focus();
+         // state is selected, no need of displaying a list
+         this.stateMatches = [];
+         // clear search list output
+         this.outputHtmlStates(this.stateMatches);
+
+         //  CITIES  //
+         if (this.stateInput === "Kosovo") {
+            this.getKosovoCities();
+         } else {
+            // get states of selected country
+            this.getCities();
+         }
       }
-
       e.preventDefault();
-
    }
 
    // Show results in HTML STATE
    outputHtmlStates = matches => {
-      console.log(matches);
       if (matches.length > 0) {
          const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.state}</h5>
          </div>
          `).join('');
-
          stateMatchList.innerHTML = html;
       } else {
          // if no input, clear search list
@@ -556,6 +504,7 @@ class Autocomplete {
       }
    }
 
+   // when input field is clicked
    clickInputState = e => {
       if (e.target.classList.contains("is-valid") && e.target.id === "stateInput" || e.target.classList.contains("is-invalid") && e.target.id === "stateInput") {
          stateInput.setAttribute("class", "form-control");
@@ -573,18 +522,11 @@ class Autocomplete {
       }
    }
 
-
-
-
-
    // ////////////////////         CITIES         //////////////////////////////
-
    getCities = async () => {
       const res = await fetch(`https://api.airvisual.com/v2/cities?state=${this.stateInput}&country=${this.countryInput}&key=${this.apiKey}`);
       this.cities = await res.json()
-      console.log(this.cities);
    };
-
 
    getKosovoCities = async () => {
       const res = await fetch(`https://alexkozelj.github.io/AirPollutionApp/serbia_cities.json`);
@@ -596,25 +538,18 @@ class Autocomplete {
       this.searchInputText = searchText;
       // Get matches to current text input
       this.cityMatches = this.cities.data.filter(city => {
-         console.log(city);
          if (searchText.length > 1) {
             const regex = new RegExp(`${searchText}`, 'gi');
             return city.city.match(regex);
          }
       });
-
-      console.log(this.cityMatches);
       // Clear when input or matches are empty
       if (searchText.length === 0) {
          this.cityMatches = [];
          cityMatchList.innerHTML = '';
       }
-
       this.outputHtmlCities(this.cityMatches);
-
    }
-
-
 
 
    keyboardSelectCity = (e) => {
@@ -652,25 +587,18 @@ class Autocomplete {
                   this.cityMatches = [];
                   // clear search list output
                   this.outputHtmlCities(this.cityMatches);
-
                }
-
                if (match === false) {
                   cityInput.setAttribute("class", "form-control is-invalid");
                   cityMatchList.innerHTML = '';
                }
-
             })
-
          }
-
          e.preventDefault();
       }
 
-
       // DOWN ARROW KEY
       if (e.keyCode === 40) {
-
          // end of a list
          if (this.childIndex === cityMatchList.children.length - 1) {
             // stay at the last li
@@ -686,7 +614,6 @@ class Autocomplete {
          }
          // assign input text from match list
          cityInput.value = cityMatchList.children[this.childIndex].children[0].innerText;
-
          // add style to list item 
          for (let i = 0; i < this.cityMatches.length; i++) {
             // match the input name and list item to add style
@@ -718,7 +645,6 @@ class Autocomplete {
             // going back
             this.childIndex -= 1;
          }
-
          // assign input text to the countries from match list
          cityInput.value = cityMatchList.children[this.childIndex].children[0].innerText;
          // add style to list item 
@@ -734,11 +660,9 @@ class Autocomplete {
                   cityMatchList.children[i + 1].setAttribute("class", "card card-body parent");
                   // item that is bin selected
                   cityMatchList.children[i].setAttribute("class", "card card-body parent selectedCard");
-
                }
             }
          }
-
          e.preventDefault();
       }
 
@@ -750,9 +674,6 @@ class Autocomplete {
    }
 
 
-
-
-
    selectCity = (e) => {
       // h5 element
       if (e.target.classList.contains("child")) {
@@ -760,31 +681,32 @@ class Autocomplete {
       }
       // parent div of h5 element
       if (e.target.classList.contains("parent")) {
-         this.cityInput = e.target.firstElementChild.innerHTML;
+         this.cityInput = e.target.firstElementChild.innerText;
       }
-
-      // assign cities from search list
-      cityInput.value = this.cityInput;
-      // set valid style to input
-      cityInput.setAttribute("class", "form-control is-valid");
-      // city is selected, no need of displaying a list
-      this.cityMatches = [];
-      // clear the matching list
-      this.outputHtmlCities(this.cityMatches);
-
+      if (this.cityInput === undefined) {
+         cityInput.value = '';
+         cityInput.setAttribute("class", "form-control is-invalid");
+      } else {
+         // assign cities from search list
+         cityInput.value = this.cityInput;
+         // set valid style to input
+         cityInput.setAttribute("class", "form-control is-valid");
+         // city is selected, no need of displaying a list
+         this.cityMatches = [];
+         // clear the matching list
+         this.outputHtmlCities(this.cityMatches);
+      }
    }
 
 
    // Show results in HTML CITY
    outputHtmlCities = matches => {
-      console.log(matches);
       if (matches.length > 0) {
          const html = matches.map(match => `
          <div class="card card-body parent">
          <h5 class="child">${match.city}</h5>
          </div>
          `).join('');
-
          cityMatchList.innerHTML = html;
       } else {
          cityMatchList.innerHTML = '';
@@ -803,5 +725,4 @@ class Autocomplete {
          this.searchInputText = undefined;
       }
    }
-
 }

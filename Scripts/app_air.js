@@ -28,7 +28,7 @@ const autocomplete = new Autocomplete();
 
 
 
-// ////////////////////    COUNTRY       ////////////////////
+// ////////////////////    COUNTRY     ////////////////////
 
 // Country input 
 const countryInput = document.getElementById("countryInput");
@@ -38,7 +38,7 @@ const countryForm = document.getElementById("country-form");
 const countryMatchList = document.getElementById("country-match-list");
 
 
-// ///////////////////     STATE      ///////////////
+// ///////////////////     STATE     ///////////////
 
 // State input
 const stateInput = document.getElementById("stateInput");
@@ -48,7 +48,7 @@ const stateForm = document.getElementById("state-form");
 const stateMatchList = document.getElementById("state-match-list");
 
 
-// ////////////////////    CITY        ////////////////////////
+// ////////////////////    CITY      ////////////////////////
 
 // City input field
 const cityInput = document.getElementById("cityInput");
@@ -58,8 +58,7 @@ const cityForm = document.getElementById("city-form");
 const cityMatchList = document.getElementById("city-match-list");
 
 
-
-// //////////////////        EVENT LISTENERS         //////////////////////////////
+// //////////////////        EVENT LISTENERS       //////////////////////////////
 
 // Load json country list
 window.addEventListener('DOMContentLoaded', autocomplete.getCountries); 
@@ -100,7 +99,7 @@ cityMatchList.addEventListener('click', autocomplete.selectCity);
 
 // Modal form element
 const form = document.getElementById("form");
-
+// Modal validation info div
 const modalInfo = document.getElementById("modal-info");
 
 
@@ -108,22 +107,26 @@ const modalInfo = document.getElementById("modal-info");
 
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
-   console.log(autocomplete.countryInput);
-   console.log(autocomplete.stateInput);
-   console.log(autocomplete.cityInput);
-
+   
    let city = autocomplete.cityInput;
    let state = autocomplete.stateInput;
    let country = autocomplete.countryInput;
-
-
-
+   // all input fields must be valid
    if( city === undefined || state === undefined || country === undefined) {
 
       city === undefined ? cityInput.setAttribute("class", "form-control is-invalid") : cityInput.setAttribute("class", "form-control is-valid");
       state === undefined ? stateInput.setAttribute("class", "form-control is-invalid") : stateInput.setAttribute("class", "form-control is-valid");
       country === undefined ? countryInput.setAttribute("class", "form-control is-invalid") : countryInput.setAttribute("class", "form-control is-valid");
-
+      // clear match lists
+      autocomplete.cityMatches = '';
+      autocomplete.stateMatches = '';
+      autocomplete.countryMatches = '';
+      // remove match lists to show validation message
+      autocomplete.outputHtmlCities(autocomplete.cityMatches);
+      autocomplete.outputHtmlStates(autocomplete.stateMatches);
+      autocomplete.outputHtmlCountry(autocomplete.countryMatches);
+      
+      // show validation message
       modalInfo.style.display = "block";
 
    } 
@@ -140,27 +143,24 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
    
       // Get and display weather
       getWeather();
-
+      // reset all values for the next input
       autocomplete.cityInput.value = '';
       autocomplete.stateInput.value = '';
       autocomplete.countryInput.value = '';
       autocomplete.searchInputText.value = '';
-      // cityInput.setAttribute("class", "form-control");
-      // cityInput.value = '';
-      // stateInput.setAttribute("class", "form-control");
-      // stateInput.value = '';
-      // countryInput.setAttribute("class", "form-control");
-      // countryInput.value = '';
-   
+      // autocomplete.cityMatchList.innerHTML = '';
+      // autocomplete.stateMatchList.innerHTML = '';
+      // autocomplete.countryMatchList.innerHTML = '';
+
       // Close modal
       $('#locModal').modal('hide');
-
    }
 
 });
 
-
+// get weather to current data
 function getWeather() {
+   // show spinner while loading
    spinner.showSpinner(spinnerDiv, rowDiv);
    weather.getWeather()
       .then(results => {

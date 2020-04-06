@@ -11,11 +11,9 @@ class UI {
       this.feelsLike = document.getElementById('w-wind-direction');
       this.dewpoint = document.getElementById('w-pressure');
       this.wind = document.getElementById('w-wind-speed');
-
    }
 
-   
-
+   // fill UI with data
    paint(weather, storage) {
       if(weather.data.city === "Mitrovice" && weather.data.country === "Kosovo") {
          this.location.textContent = "Kosovska Mitrovica, Serbia"
@@ -32,7 +30,6 @@ class UI {
       let aqi = weather.data.current.pollution.aqius;
 
       // depending of pollution index, button will get certain class
-
       // Good
       if(aqi < 51) {
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 good");
@@ -47,11 +44,9 @@ class UI {
       }
 
       // Moderate
-      else if (aqi > 51 && aqi < 100) {
-         
+      else if (aqi > 51 && aqi < 100) {  
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 moderate");
          this.pollutionSign.innerHTML = "Moderate";
-
          // description text
          const header = "51 - 100 = Moderate";
          const content = "Air quality is acceptable and poses little health risk. Sensitive individuals should avoid outdoor activity as they may experience respiratory symptoms.";
@@ -64,10 +59,8 @@ class UI {
 
       // Unhealthy*
       else if (aqi > 101 && aqi < 150) {
-         
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 unhealthy-1");
          this.pollutionSign.innerHTML = "Unhealthy";
-
          // description text
          const header = "101 - 150 = Unhealthy for Sensitive Groups";
          const content = "General public and sensitive individuals in particular are at risk to experience irritation and respiratory problems.";
@@ -77,12 +70,11 @@ class UI {
          document.getElementById("description-2").innerHTML = content;
          document.getElementById("description-3").innerHTML = recommendation;
       }
+
       // Unhealthy**
       else if (aqi > 151 && aqi < 200) {
-
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 unhealthy-2");
          this.pollutionSign.innerHTML = "Unhealthy**";
-
          // description text
          const header = "151 - 200 = Unhealthy";
          const content = "Increased likelihood of adverse effects and aggravation to the heart and lungs among general public - particularly for sensitive groups.";
@@ -92,12 +84,11 @@ class UI {
          document.getElementById("description-2").innerHTML = content;
          document.getElementById("description-3").innerHTML = recommendation;
       }
+
       // Very unhealthy
       else if (aqi > 201 && aqi < 300) {
-
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 very-unhealthy");
          this.pollutionSign.innerHTML = "Very Unhealthy";
-
          // description text
          const header = "201 - 300 = Very Unhealthy";
          const content = "General public will be noticeably affected. Sensitive groups will experience reduced endurance in activities. These individuals should remain indoors and restrict activities.";
@@ -107,12 +98,11 @@ class UI {
          document.getElementById("description-2").innerHTML = content;
          document.getElementById("description-3").innerHTML = recommendation;
       }
+
       // Hazardous
       else if (aqi > 201 && aqi < 500) {
-
          this.pollutionSign.setAttribute("class", "col-md-5 mx-auto text-center mb-4 mt-4 hazardous");
          this.pollutionSign.innerHTML = "Hazardous";
-
          // description text
          const header = "201 - 300 = Hazardous";
          const content = " General public and sensitive groups are at high risk to experience strong irritations and adverse health effects that could trigger other illnesses. Everyone should avoid exercise and remain indoors.";
@@ -125,7 +115,6 @@ class UI {
       else {
          alert("Something's wrong, please try latter")
       }
-
 
       this.desc.textContent = weather.data.current.weather.tp + " C°";
       // if there is a fog, change the N character to D to get the icon from server
@@ -151,5 +140,4 @@ class UI {
       var arr = ["North", "North-NorthEast", "North-East", "East-NorthEast", "East", "East-SouthEast", "South-East", "South-SouthEast", "South", "South-SouthWest", "South-West", "West-SouthWest", "West", "West-NorthWest", "North-West", "North-NorthWest"];
       return arr[(val % 16)];
    }
-
 }

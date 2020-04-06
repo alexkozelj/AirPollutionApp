@@ -73,7 +73,10 @@ img {
 .list-group-item {
    padding: 0.3rem 1.25rem;
 }
-
+h5 {
+   margin: 0.2rem 0;
+   font-size: 1.15rem;
+}
 // autocomplete dropdown divs
 .card-body {
    padding: 0.7rem;
@@ -214,7 +217,10 @@ img {
    .card-body {
       padding: 0.3rem 0.5rem;
    }
-
+   h5 {
+      margin: 0.2rem 0;
+      font-size: 1rem;
+   }
    .btn {
       font-size: 0.8rem;
    }

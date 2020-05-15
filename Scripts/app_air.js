@@ -148,9 +148,7 @@ document.getElementById('w-change-btn').addEventListener('click', (e) => {
       autocomplete.stateInput.value = '';
       autocomplete.countryInput.value = '';
       autocomplete.searchInputText.value = '';
-      // autocomplete.cityMatchList.innerHTML = '';
-      // autocomplete.stateMatchList.innerHTML = '';
-      // autocomplete.countryMatchList.innerHTML = '';
+      
 
       // Close modal
       $('#locModal').modal('hide');

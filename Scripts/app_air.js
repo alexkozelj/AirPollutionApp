@@ -105,6 +105,16 @@ const modalInfo = document.getElementById("modal-info");
 
 // /////////////////// MODAL SAVE CHANGES BUTTON /////////////////
 
+document.getElementById('locModal').addEventListener('keydown', (e) => {
+   console.log(e)
+   if(e.key === 'Enter' &&  autocomplete.cityInput && autocomplete.cityInput.value !== '' && autocomplete.stateInput.value !== '' && autocomplete.countryInput.value !== '') {
+      event.preventDefault();
+      console.log('it is inside')
+      document.getElementById("w-change-btn").click();
+   } else {
+      return
+   }
+});
 // Change location event
 document.getElementById('w-change-btn').addEventListener('click', (e) => {
    

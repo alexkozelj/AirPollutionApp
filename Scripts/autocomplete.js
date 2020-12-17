@@ -2,8 +2,14 @@
 class Autocomplete {
 
    constructor() {
+
+      this.weather = new Weather();
+
+      this.apiKey = this.weather.apiKey;
+      // console.log("Autocomplete -> constructor -> apiKey", this.apiKey)
+
       // Api key
-      this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
+      // this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4'
 
       // search input text
       this.searchInputText;
@@ -556,6 +562,7 @@ class Autocomplete {
 
       // ENTER KEY
       if (e.keyCode === 13) {
+         // if (this.cityInput !== undefined) {}
          // remove cursor when enter key is pressed
          cityInput.blur();
          // assign global var to input value

@@ -8,6 +8,7 @@ class UI {
       this.details = document.getElementById('w-details');
       this.icon = document.getElementById('w-icon');
       this.humidity = document.getElementById('w-humidity');
+      this.timestamp = document.getElementById('w-timestamp');
       this.feelsLike = document.getElementById('w-wind-direction');
       this.dewpoint = document.getElementById('w-pressure');
       this.wind = document.getElementById('w-wind-speed');
@@ -128,7 +129,13 @@ class UI {
       if (weather.data.current.weather.ic === "13n") {
          this.icon.setAttribute('src', "https://airvisual.com/images/13d.png");
       }
+
+      // import moment from 'C:\Users\aleks\Documents\AirPollutionApp\node_modules\moment';
+      // const formatTimestamp = moment(`"${weather.data.current.pollution.ts}", "YYYYMMDD"`).fromNow();
+      // var moment = require('moment'); // require
+      const formatTimestamp = weather.data.current.pollution.ts.slice(0, -5).replace('T', ' ');
       this.humidity.textContent = `Relative Humidity: ${weather.data.current.weather.hu}%`;
+      this.timestamp.textContent = "Pollution Timestamp: " + formatTimestamp;
       this.dewpoint.textContent = `Pressure: ${weather.data.current.weather.pr}mb`;
       this.feelsLike.textContent = `Wind Direction: ${this.degToCompass(weather.data.current.weather.wd)}`;
       this.wind.textContent = "Wind Speed: " + weather.data.current.weather.ws + "km/h";

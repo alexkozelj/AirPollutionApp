@@ -1,6 +1,6 @@
 class Weather {
    constructor(city, state, country) {
-      this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4';
+      this.apiKey = 'bc0a9898-a47e-468d-b220-6d1f68798f2c';
       this.city = city;
       this.state = state;
       this.country = country;
@@ -11,7 +11,7 @@ class Weather {
    async getWeather() {
       // Kosovo is Serbian state, correction
       if (this.city === "Kosovska Mitrovica" && this.state === "Kosovo" && this.country === "Serbia") {
-         const response = await fetch(`https://api.airvisual.com/v2/city?city=mitrovice&state=mitrovica&country=kosovo&key=08145b70-7c87-4d40-9c07-1bcdbe2b35f4`);
+         const response = await fetch(`https://api.airvisual.com/v2/city?city=mitrovice&state=mitrovica&country=kosovo&key=${this.apiKey}`);
          const responseData = await response.json();
          return responseData;
       } else {

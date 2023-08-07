@@ -9,8 +9,6 @@ class Autocomplete {
       // console.log("Autocomplete -> constructor -> apiKey", this.apiKey)
 
       // Api key
-      // this.apiKey = '08145b70-7c87-4d40-9c07-1bcdbe2b35f4'
-
       // search input text
       this.searchInputText;
       // index of a list element that is in focus
